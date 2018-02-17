@@ -1,0 +1,253 @@
+package DMB.PRJ.MusicFront.controller;
+
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import DMB.PRJ.MusicBack.dao.AlbumDAO;
+import DMB.PRJ.MusicBack.dao.ArtistDAO;
+import DMB.PRJ.MusicBack.dao.GenreDAO;
+import DMB.PRJ.MusicBack.dao.SongDAO;
+import DMB.PRJ.MusicBack.dto.Album;
+import DMB.PRJ.MusicBack.dto.Artist;
+import DMB.PRJ.MusicBack.dto.Genre;
+import DMB.PRJ.MusicBack.dto.Song;
+import DMB.PRJ.MusicFront.util.FileUploadUtility;
+import DMB.PRJ.MusicFront.validator.AlbumValidator;
+import DMB.PRJ.MusicFront.validator.ArtistValidator;
+import DMB.PRJ.MusicFront.validator.GenreValidator;
+import DMB.PRJ.MusicFront.validator.SongValidator;
+
+@Controller
+@RequestMapping("/manage")
+public class ManagementController {
+	@Autowired
+	private ArtistDAO artdao;
+	@Autowired
+	private GenreDAO gdao;
+	@Autowired
+	private AlbumDAO albdao;
+	@Autowired
+	private SongDAO sdao;
+	@ModelAttribute("artists")
+	public List<Artist> artlist() {
+		return artdao.listAllArtists();
+	}
+	@ModelAttribute("genres")
+	public List<Genre> genrelist() {
+		return gdao.listAllGenres();
+	}
+	@ModelAttribute("albums")
+	public List<Album> albumlist() {
+		return albdao.listAllAlbums();
+	}
+	private static final Logger l = LoggerFactory.getLogger(ManagementController.class);
+	
+	@RequestMapping(value="/albums", method=RequestMethod.GET)
+	public ModelAndView manageAlbums(@RequestParam(name="operation", required=false) String o) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageAlbums", true);
+		mv.addObject("title", "Manage Albums");
+		Album a = new Album();
+		mv.addObject("album", a);
+		if (o!=null) 
+			if (o.equals("album"))
+				mv.addObject("message", "Album Submitted Successfully!");
+		return mv;
+	}
+	@RequestMapping(value="/albums", method=RequestMethod.POST)
+	public String handleNewAlbum(@Valid @ModelAttribute("album") Album a, BindingResult r, Model m, HttpServletRequest req) {
+		if(a.getPic().equals("")) new AlbumValidator().validate(a, r);
+		else if(!a.getFile().getOriginalFilename().equals("")) new AlbumValidator().validate(a, r);
+		if (r.hasErrors()) {
+			m.addAttribute("userClickManageAlbums", true);
+			m.addAttribute("title", "Manage Albums");
+			m.addAttribute("message", "Album Release Failed!!!");
+			return "page";
+		}
+		if(a.getPic().equals("")) albdao.add(a);
+		else albdao.update(a);
+		if (!a.getFile().getOriginalFilename().equals("")) {
+			FileUploadUtility.uploadPic(req, a.getFile(), a.getPic());
+		}
+		l.info(a.toString());
+		return "redirect:/manage/albums?operation=album";
+	}
+	@RequestMapping(value="/{artist}/{album}/activation", method=RequestMethod.POST)
+	@ResponseBody
+	public String handleAlbumActivation(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+		Album alb = albdao.get(artist, album);
+		boolean active = alb.isActive();
+		alb.setActive(!active);
+		albdao.update(alb);
+		return active ? artist + "'s " + album + " Was successfully Broken!" : artist + "'s " + album + " Was successfully Restored!" ;
+	}
+	@RequestMapping(value="/{artist}/{album}", method=RequestMethod.GET)
+	public ModelAndView manageAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageAlbums", true);
+		mv.addObject("title", "Manage " + artist + " " + album );
+		Album alb = albdao.get(artist, album);
+		mv.addObject("album", alb);
+		return mv;
+	}
+	
+	@RequestMapping(value="/artists", method=RequestMethod.GET)
+	public ModelAndView manageArtists(@RequestParam(name="operation", required=false) String o) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageArtists", true);
+		mv.addObject("title", "Manage Artists");
+		Artist a = new Artist();
+		mv.addObject("artist", a);
+		if (o!=null) 
+			if (o.equals("artist"))
+				mv.addObject("message", "Artist Submitted Successfully!");
+		return mv;
+	}
+	@RequestMapping(value="/artists", method=RequestMethod.POST)
+	public String handleNewArtist(@Valid @ModelAttribute("artist") Artist a, BindingResult r, Model m, HttpServletRequest req) {
+		if(a.getPic().equals("")) new ArtistValidator().validate(a, r);
+		else if(!a.getFile().getOriginalFilename().equals("")) new ArtistValidator().validate(a, r);
+		if (r.hasErrors()) {
+			m.addAttribute("userClickManageArtists", true);
+			m.addAttribute("title", "Manage Artists");
+			m.addAttribute("message", "Artist Creation Failed!!!");
+			return "page";
+		}
+		if(a.getPic().equals("")) artdao.add(a);
+		else artdao.update(a);
+		if (!a.getFile().getOriginalFilename().equals("")) {
+			FileUploadUtility.uploadPic(req, a.getFile(), a.getPic());
+		}
+		l.info(a.toString());
+		return "redirect:/manage/artists?operation=artist";
+	}
+	@RequestMapping(value="/artist/{name}/activation", method=RequestMethod.POST)
+	@ResponseBody
+	public String handleArtistActivation(@PathVariable("name") String name) {
+		Artist a = artdao.get(name);
+		boolean active = a.isActive();
+		a.setActive(!active);
+		artdao.update(a);
+		return active ? name + " Was successfully Killed!" : name + " Was successfully Re-Animated!" ;
+	}
+	@RequestMapping(value="/artist/{name}", method=RequestMethod.GET)
+	public ModelAndView manageArtist(@PathVariable("name") String name) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageArtists", true);
+		mv.addObject("title", "Manage " + name + " Artist");
+		Artist a = artdao.get(name);
+		mv.addObject("artist", a);
+		return mv;
+	}
+	
+	@RequestMapping(value="/genres", method=RequestMethod.GET)
+	public ModelAndView manageGenres(@RequestParam(name="operation", required=false) String o) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageGenres", true);
+		mv.addObject("title", "Manage Genres");
+		Genre g = new Genre();
+		mv.addObject("genre", g);
+		if (o!=null) 
+			if (o.equals("genre"))
+				mv.addObject("message", "Genre Submitted Successfully!");
+		return mv;
+	}
+	@RequestMapping(value="/genres", method=RequestMethod.POST)
+	public String handleNewGenre(@Valid @ModelAttribute("genre") Genre g, BindingResult r, Model m, HttpServletRequest req) {
+		if(g.getPic().equals("")) new GenreValidator().validate(g, r);
+		else if(!g.getFile().getOriginalFilename().equals("")) new GenreValidator().validate(g, r);
+		if (r.hasErrors()) {
+			m.addAttribute("userClickManageGenres", true);
+			m.addAttribute("title", "Manage Genres");
+			m.addAttribute("message", "Genre Adddition Failed!!!");
+			return "page";
+		}
+		if(g.getPic().equals("")) gdao.add(g);
+		else gdao.update(g);
+		if (!g.getFile().getOriginalFilename().equals("")) {
+			FileUploadUtility.uploadPic(req, g.getFile(), g.getPic());
+		}
+		l.info(g.toString());
+		return "redirect:/manage/genres?operation=genre";
+	}
+	@RequestMapping(value="/genre/{name}/activation", method=RequestMethod.POST)
+	@ResponseBody
+	public String handleGenreActivation(@PathVariable("name") String name) {
+		Genre g = gdao.get(name);
+		boolean active = g.isActive();
+		g.setActive(!active);
+		gdao.update(g);
+		return active ? name + " Was successfully Phased Out!" : name + " Was successfully Phased In!" ;
+	}
+	@RequestMapping(value="/genre/{name}", method=RequestMethod.GET)
+	public ModelAndView manageGenre(@PathVariable("name") String name) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageGenres", true);
+		mv.addObject("title", "Manage " + name + " Genre");
+		Genre g = gdao.get(name);
+		mv.addObject("genre", g);
+		return mv;
+	}
+	
+	@RequestMapping(value="/{artist}/{album}/songs", method=RequestMethod.GET)
+	public ModelAndView manageSongs(@RequestParam(name="operation", required=false) String o, @PathVariable("album") String album, @PathVariable("artist") String artist) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageSongs", true);
+		mv.addObject("title", "Manage Songs");
+		Song s = new Song();
+		mv.addObject("song", s);
+		mv.addObject("artist", artist);
+		mv.addObject("album", album);
+		if (o!=null) 
+			if (o.equals("song"))
+				mv.addObject("message", "Song Submitted Successfully!");
+		return mv;
+	}
+	@RequestMapping(value="/{artist}/{album}/songs", method=RequestMethod.POST)
+	public String handleNewSong(@Valid @ModelAttribute("song") Song s, BindingResult r, Model m, HttpServletRequest req, @PathVariable("album") String album, @PathVariable("artist") String artist) {
+		if(s.getPreview().equals("")) new SongValidator().validate(s, r);
+		else if(!s.getFile().getOriginalFilename().equals("")) new SongValidator().validate(s, r);
+		if (r.hasErrors()) {
+			m.addAttribute("userClickManageSongs", true);
+			m.addAttribute("title", "Manage Songs");
+			m.addAttribute("message", "Song Recording Failed!!!");
+			return "page";
+		}
+		if(s.getPreview().equals("")) {
+			s.setAlbum(album);
+			s.setArtist(artist);
+			sdao.add(s);
+		}
+		else sdao.update(s);
+		if (!s.getFile().getOriginalFilename().equals("")) {
+			FileUploadUtility.uploadSong(req, s.getFile(), s.getPreview());
+		}
+		l.info(s.toString());
+		return "redirect:/manage/"+ artist +"/"+ album +"/songs?operation=song";
+	}
+	@RequestMapping(value="/{artist}/{album}/{track}", method=RequestMethod.GET)
+	public ModelAndView manageAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickManageSongs", true);
+		mv.addObject("title", "Manage " + artist + " " + album + " " + track + " Song");
+		Song s = sdao.get(artist, album, track);
+		mv.addObject("song", s);
+		return mv;
+	}
+}
