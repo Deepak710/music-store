@@ -36,7 +36,7 @@ public class HibernateConfig {
 	{
 		LocalSessionFactoryBuilder sfb = new LocalSessionFactoryBuilder(ds);
 		sfb.addProperties(getHibernateProperties());
-		sfb.scanPackages("DMB.PRJ.MusicBack");
+		sfb.scanPackages("DMB.PRJ.MusicBack.dto");
 		return sfb.buildSessionFactory();
 		
 	}

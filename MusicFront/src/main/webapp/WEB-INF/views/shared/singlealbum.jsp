@@ -3,6 +3,8 @@
 		<script>
 			window.album = '${album.name}';
 			window.albartist = '${album.artist}';
+			window.role = '${role}';
+			window.logged = '${logged}';
 		</script>
 		<div class = "col-md-3">
 			<br/>
@@ -54,6 +56,9 @@
 			<c:choose>
 				<c:when test = "${rate < 1}">
 					<a href="javascript:void(0)"><button style = "font-size:24px" class = "btn btn-outline-warning disabled"> <strike>No Songs in Album...  <i class="fa fa-cart-arrow-down"></i></strike></button></a>
+				</c:when>
+				<c:when test = "${role != 'USER'}">
+					<a href="javascript:void(0)"><button style = "font-size:24px" class = "btn btn-outline-warning disabled"> Log In to Buy Album!!! <i class="fa fa-cart-arrow-down"></i></button></a>
 				</c:when>
 				<c:otherwise>
 					<a href="${contextRoot}/add/${album.artist}/${album.name}"><button style = "font-size:24px" class = "btn btn-outline-success">Buy Now  <i class="fa fa-cart-arrow-down"></i></button></a>

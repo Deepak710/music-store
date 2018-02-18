@@ -23,10 +23,12 @@ import DMB.PRJ.MusicBack.dao.AlbumDAO;
 import DMB.PRJ.MusicBack.dao.ArtistDAO;
 import DMB.PRJ.MusicBack.dao.GenreDAO;
 import DMB.PRJ.MusicBack.dao.SongDAO;
+import DMB.PRJ.MusicBack.dao.UserDAO;
 import DMB.PRJ.MusicBack.dto.Album;
 import DMB.PRJ.MusicBack.dto.Artist;
 import DMB.PRJ.MusicBack.dto.Genre;
 import DMB.PRJ.MusicBack.dto.Song;
+import DMB.PRJ.MusicBack.dto.User;
 import DMB.PRJ.MusicFront.util.FileUploadUtility;
 import DMB.PRJ.MusicFront.validator.AlbumValidator;
 import DMB.PRJ.MusicFront.validator.ArtistValidator;
@@ -44,6 +46,9 @@ public class ManagementController {
 	private AlbumDAO albdao;
 	@Autowired
 	private SongDAO sdao;
+	@Autowired
+	private UserDAO udao;
+	
 	@ModelAttribute("artists")
 	public List<Artist> artlist() {
 		return artdao.listAllArtists();
@@ -56,6 +61,7 @@ public class ManagementController {
 	public List<Album> albumlist() {
 		return albdao.listAllAlbums();
 	}
+	
 	private static final Logger l = LoggerFactory.getLogger(ManagementController.class);
 	
 	@RequestMapping(value="/albums", method=RequestMethod.GET)
@@ -68,6 +74,14 @@ public class ManagementController {
 		if (o!=null) 
 			if (o.equals("album"))
 				mv.addObject("message", "Album Submitted Successfully!");
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/albums", method=RequestMethod.POST)
@@ -78,6 +92,14 @@ public class ManagementController {
 			m.addAttribute("userClickManageAlbums", true);
 			m.addAttribute("title", "Manage Albums");
 			m.addAttribute("message", "Album Release Failed!!!");
+			
+			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			else {
+				User u1 = udao.get(udao.loggedUser());
+				m.addAttribute("logged", u1.getName());
+			}
+			m.addAttribute("role", udao.loggedUserRole());
+			
 			return "page";
 		}
 		if(a.getPic().equals("")) albdao.add(a);
@@ -104,6 +126,14 @@ public class ManagementController {
 		mv.addObject("title", "Manage " + artist + " " + album );
 		Album alb = albdao.get(artist, album);
 		mv.addObject("album", alb);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	
@@ -117,6 +147,14 @@ public class ManagementController {
 		if (o!=null) 
 			if (o.equals("artist"))
 				mv.addObject("message", "Artist Submitted Successfully!");
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/artists", method=RequestMethod.POST)
@@ -127,6 +165,14 @@ public class ManagementController {
 			m.addAttribute("userClickManageArtists", true);
 			m.addAttribute("title", "Manage Artists");
 			m.addAttribute("message", "Artist Creation Failed!!!");
+			
+			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			else {
+				User u1 = udao.get(udao.loggedUser());
+				m.addAttribute("logged", u1.getName());
+			}
+			m.addAttribute("role", udao.loggedUserRole());
+			
 			return "page";
 		}
 		if(a.getPic().equals("")) artdao.add(a);
@@ -153,6 +199,14 @@ public class ManagementController {
 		mv.addObject("title", "Manage " + name + " Artist");
 		Artist a = artdao.get(name);
 		mv.addObject("artist", a);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	
@@ -166,6 +220,14 @@ public class ManagementController {
 		if (o!=null) 
 			if (o.equals("genre"))
 				mv.addObject("message", "Genre Submitted Successfully!");
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/genres", method=RequestMethod.POST)
@@ -176,6 +238,14 @@ public class ManagementController {
 			m.addAttribute("userClickManageGenres", true);
 			m.addAttribute("title", "Manage Genres");
 			m.addAttribute("message", "Genre Adddition Failed!!!");
+			
+			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			else {
+				User u1 = udao.get(udao.loggedUser());
+				m.addAttribute("logged", u1.getName());
+			}
+			m.addAttribute("role", udao.loggedUserRole());
+			
 			return "page";
 		}
 		if(g.getPic().equals("")) gdao.add(g);
@@ -202,6 +272,14 @@ public class ManagementController {
 		mv.addObject("title", "Manage " + name + " Genre");
 		Genre g = gdao.get(name);
 		mv.addObject("genre", g);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	
@@ -217,6 +295,14 @@ public class ManagementController {
 		if (o!=null) 
 			if (o.equals("song"))
 				mv.addObject("message", "Song Submitted Successfully!");
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/{artist}/{album}/songs", method=RequestMethod.POST)
@@ -227,6 +313,14 @@ public class ManagementController {
 			m.addAttribute("userClickManageSongs", true);
 			m.addAttribute("title", "Manage Songs");
 			m.addAttribute("message", "Song Recording Failed!!!");
+			
+			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			else {
+				User u1 = udao.get(udao.loggedUser());
+				m.addAttribute("logged", u1.getName());
+			}
+			m.addAttribute("role", udao.loggedUserRole());
+			
 			return "page";
 		}
 		if(s.getPreview().equals("")) {
@@ -248,6 +342,115 @@ public class ManagementController {
 		mv.addObject("title", "Manage " + artist + " " + album + " " + track + " Song");
 		Song s = sdao.get(artist, album, track);
 		mv.addObject("song", s);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
+	}
+	
+	@RequestMapping(value="/signup", method=RequestMethod.GET)
+	public ModelAndView manageSignup(@RequestParam(name="operation", required=false) String o) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickSignup", true);
+		mv.addObject("title", "Sign Up!!!");
+		User u = new User();
+		mv.addObject("user", u);
+		if (o!=null) 
+			if (o.equals("user"))
+				mv.addObject("message", "User Created Successfully!");
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u1 = udao.get(udao.loggedUser());
+			mv.addObject("logged", u1.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
+		return mv;
+	}
+	@RequestMapping(value="/signup", method=RequestMethod.POST)
+	public String handleNewSignup(@Valid @ModelAttribute("user") User u, BindingResult r, Model m, HttpServletRequest req) {
+		if (r.hasErrors()) {
+			m.addAttribute("userClickSignup", true);
+			m.addAttribute("title", "Sign Up!!!");
+			m.addAttribute("message", "User Creation Failed!!!");
+			
+			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			else {
+				User u1 = udao.get(udao.loggedUser());
+				m.addAttribute("logged", u1.getName());
+			}
+			m.addAttribute("role", udao.loggedUserRole());
+			
+			return "page";
+		}
+		if(udao.loggedUser().equals("null")) u.setRole("USER");
+		l.info(u.toString());
+		udao.add(u);
+		return "redirect:/manage/signup?operation=user";
+	}
+	
+	@RequestMapping(value="/login", method=RequestMethod.GET)
+	public ModelAndView manageLogin(@RequestParam(name="operation", required=false) String o) {
+		ModelAndView mv = new ModelAndView("page");
+		mv.addObject("userClickLogin", true);
+		mv.addObject("title", "Log In");
+		User u = new User();
+		mv.addObject("user", u);
+		if (o!=null) {
+			User c = udao.get(o);
+			c.setEnabled(true);
+			udao.update(c);
+			mv.addObject("message", c.getName() + " Logged in Successfully");
+		}
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u1 = udao.get(udao.loggedUser());
+			mv.addObject("logged", u1.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
+		return mv;
+	}
+	@RequestMapping(value="/login", method=RequestMethod.POST)
+	public String handleNewLogin(@Valid @ModelAttribute("user") User u, BindingResult r, Model m, HttpServletRequest req) {
+		if(!u.getEmail().equals("")) {
+			User c = udao.get(u.getEmail());
+			if(u.getPassword().equals(c.getPassword()))	return "redirect:/manage/login?operation=" + u.getEmail();
+			else {
+				m.addAttribute("userClickLogin", true);
+				m.addAttribute("title", "Log In");
+				m.addAttribute("message", "Username or Password is Incorrect");
+				
+				if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+				else {
+					User u1 = udao.get(udao.loggedUser());
+					m.addAttribute("logged", u1.getName());
+				}
+				m.addAttribute("role", udao.loggedUserRole());
+				
+				return "page";
+			}
+		}
+		else {
+			m.addAttribute("userClickLogin", true);
+			m.addAttribute("title", "Log In");
+			m.addAttribute("message", "Incorrect Login Credentials");
+			
+			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			else {
+				User u1 = udao.get(udao.loggedUser());
+				m.addAttribute("logged", u1.getName());
+			}
+			m.addAttribute("role", udao.loggedUserRole());
+			
+			return "page";
+		}
 	}
 }

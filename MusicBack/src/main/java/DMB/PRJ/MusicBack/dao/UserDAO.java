@@ -11,4 +11,6 @@ public interface UserDAO {
 	boolean add(User u);
 	boolean updateCart(Cart c);
 	boolean update(User u);
+	String loggedUser();
+	String loggedUserRole();
 }

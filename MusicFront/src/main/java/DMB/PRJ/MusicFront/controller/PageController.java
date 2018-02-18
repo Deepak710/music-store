@@ -14,10 +14,12 @@ import DMB.PRJ.MusicBack.dao.AlbumDAO;
 import DMB.PRJ.MusicBack.dao.ArtistDAO;
 import DMB.PRJ.MusicBack.dao.GenreDAO;
 import DMB.PRJ.MusicBack.dao.SongDAO;
+import DMB.PRJ.MusicBack.dao.UserDAO;
 import DMB.PRJ.MusicBack.dto.Album;
 import DMB.PRJ.MusicBack.dto.Artist;
 import DMB.PRJ.MusicBack.dto.Genre;
 import DMB.PRJ.MusicBack.dto.Song;
+import DMB.PRJ.MusicBack.dto.User;
 import DMB.PRJ.MusicFront.exception.EntityNotFoundException;
 
 @Controller
@@ -31,6 +33,8 @@ public class PageController {
 	private AlbumDAO albdao;
 	@Autowired
 	private SongDAO sdao;
+	@Autowired
+	private UserDAO udao;
 	@RequestMapping(value = {"/", "/home"})
 	public ModelAndView home() {
 		l.info("Inside Home Page; PageController.java home() method - INFO");
@@ -40,24 +44,32 @@ public class PageController {
 		mv.addObject("userClickHome", true);
 		mv.addObject("genres", gdao.listActiveGenres());
 		mv.addObject("artists",artdao.listActiveArtists());
+		
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
-	@RequestMapping(value="/login")
-	public ModelAndView login() {
-		l.info("Inside Login Page; PageController.java login() method - INFO");
-		l.debug("Inside Login Page; PageController.java login() method - DEBUG");
-		ModelAndView mv=new ModelAndView("page");
-		mv.addObject("title","Log In");
-		mv.addObject("userClickLogin",true);
-		return mv;
-	}
-	@RequestMapping(value="/signup")
-	public ModelAndView signup() {
-		l.info("Inside Signup Page; PageController.java signup() method - INFO");
-		l.debug("Inside Signup Page; PageController.java signup() method - DEBUG");
-		ModelAndView mv=new ModelAndView("page");
-		mv.addObject("title","Sign Up");
-		mv.addObject("userClickSignup",true);
+	@RequestMapping(value = {"/signout"})
+	public ModelAndView signout() {
+		ModelAndView mv = new ModelAndView("redirect:/home");
+		mv.addObject("userClickHome", true);
+		
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
+		User c = udao.get(udao.loggedUser());
+		c.setEnabled(false);
+		udao.update(c);
+		
 		return mv;
 	}
 	@RequestMapping(value="/all/album")
@@ -69,6 +81,14 @@ public class PageController {
 		mv.addObject("genres",gdao.listActiveGenres());
 		mv.addObject("artists",artdao.listActiveArtists());
 		mv.addObject("userClickBrowse", true);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/language/{name}/album")
@@ -82,6 +102,14 @@ public class PageController {
 		mv.addObject("artists",artdao.listActiveArtists());
 		mv.addObject("lang", name);
 		mv.addObject("userClickLanguage", true);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/genre/{name}/album")
@@ -98,6 +126,14 @@ public class PageController {
 		mv.addObject("genres",gdao.listActiveGenres());
 		mv.addObject("artists",artdao.listActiveArtists());
 		mv.addObject("userClickGenre", true);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/artist/{name}/album")
@@ -114,6 +150,14 @@ public class PageController {
 		mv.addObject("genres",gdao.listActiveGenres());
 		mv.addObject("artists",artdao.listActiveArtists());
 		mv.addObject("userClickArtist", true);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 	@RequestMapping(value="/view/{artist}/{album}")
@@ -135,6 +179,14 @@ public class PageController {
 		mv.addObject("album", alb);
 		mv.addObject("rate", rate);
 		mv.addObject("userClickAlbum", true);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
 		return mv;
 	}
 }

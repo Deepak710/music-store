@@ -6,17 +6,27 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 @Entity
 public class User implements Serializable{
 	private static final long serialVersionUID = 1L;
+	@NotBlank(message = "Enter User Name...")
 	private String name;
 	private String role;
+	@Size(min = 8, message = "Password must be at-least 8 characters")
 	private String password;
-	private boolean enabled = true;
+	private boolean enabled = false;
+	@NotBlank(message = "Enter Your Address...")
 	private String address;
-	private long phone;
+	@Pattern(regexp="\\d{10}", message = "Enter Valid Phone Number")
+	private String phone;
 	@Id
+	@NotBlank(message = "Enter E-Mail Address...")
+	@Email(message = "Enter Valid E-Mail Address")
 	private String email;
 	@OneToOne(mappedBy = "u", cascade = CascadeType.ALL)
 	private Cart c;
@@ -61,10 +71,10 @@ public class User implements Serializable{
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	public long getPhone() {
+	public String getPhone() {
 		return phone;
 	}
-	public void setPhone(long phone) {
+	public void setPhone(String phone) {
 		this.phone = phone;
 	}
 	public String getEmail() {

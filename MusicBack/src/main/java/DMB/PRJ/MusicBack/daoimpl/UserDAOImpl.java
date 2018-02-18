@@ -2,6 +2,8 @@ package DMB.PRJ.MusicBack.daoimpl;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +69,34 @@ public class UserDAOImpl implements UserDAO {
 		catch(Exception e) {
 			e.printStackTrace();
 			return false;
+		}
+	}
+
+	@Override
+	public String loggedUser() {
+		String select = "FROM User WHERE enabled = :enabled";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("enabled", true);
+		try {
+			User u = (User)q.getSingleResult();
+			return u.getEmail();
+		}
+		catch (NoResultException e) {
+			return "null";
+		}
+	}
+
+	@Override
+	public String loggedUserRole() {
+		String select = "FROM User WHERE enabled = :enabled";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("enabled", true);
+		try {
+			User u = (User)q.getSingleResult();
+			return u.getRole();
+		}
+		catch (NoResultException e) {
+			return "null";
 		}
 	}
 

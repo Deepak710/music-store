@@ -4,8 +4,8 @@
 		<c:if test="${not empty message}">
 			<div class = "col-md-12">
 				<div class = "alert alert-success alert-dismissible">
-					<button type = "button" class = "close" data-dismiss = "alert">&times;</button>
 					${message}
+					<button type = "button" class = "close" data-dismiss = "alert">&times;</button>
 				</div>
 			</div>
 		</c:if>
@@ -54,6 +54,10 @@
 		</div>
 	</div>
 	<div class =  "row">
+		<script>
+			window.role = '${role}';
+			window.logged = '${logged}';
+		</script>
 		<div class = "col-md-12">
 			<br/><br/><br/><br/>
 			<h5>Available Artists</h5>

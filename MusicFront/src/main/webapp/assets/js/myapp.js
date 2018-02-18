@@ -3,7 +3,7 @@ $(function() {
 	case 'Log In':
 		$('#login').addClass('active');
 		break;
-	case 'Sign Up':
+	case 'Sign Up!!!':
 		$('#signup').addClass('active');
 		break;
 	case 'Manage Albums':
@@ -66,7 +66,7 @@ $(function() {
 												+ '/'
 												+ row.name
 												+ '" class="btn btn-outline-info btn-sm"> <span class = "fas fa-eye"></span> </a> &#160;';
-										if (row.songs < 1)
+										if (row.songs < 1 || window.role != 'USER')
 											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
 										else
 											str += '<a href = "'
@@ -133,7 +133,7 @@ $(function() {
 												+ '/'
 												+ row.name
 												+ '" class="btn btn-outline-info btn-sm"> <span class = "fas fa-eye"></span> </a> &#160;';
-										if (row.songs < 1)
+										if (row.songs < 1 || window.role != 'USER')
 											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
 										else
 											str += '<a href = "'
@@ -198,7 +198,7 @@ $(function() {
 												+ '/'
 												+ row.name
 												+ '" class="btn btn-outline-info btn-sm"> <span class = "fas fa-eye"></span> </a> &#160;';
-										if (row.songs < 1)
+										if (row.songs < 1 || window.role != 'USER')
 											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
 										else
 											str += '<a href = "'
@@ -262,7 +262,7 @@ $(function() {
 												+ '/'
 												+ row.name
 												+ '" class="btn btn-outline-info btn-sm"> <span class = "fa fa-eye"></span> </a> &#160;';
-										if (row.songs < 1)
+										if (row.songs < 1 || window.role != 'USER')
 											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
 										else
 											str += '<a href = "'
@@ -329,15 +329,18 @@ $(function() {
 									data : 'track_no',
 									bSortable : false,
 									mRender : function(data, type, row, meta) {
-										return '<a href = "'
-												+ window.contextRoot
-												+ '/add/'
-												+ row.artist
-												+ '/'
-												+ row.album
-												+ '/'
-												+ row.track_no
-												+ '" class="btn btn-outline-success btn-sm"> <span class = "fa fa-cart-plus"></span> </a>';
+										if (window.role != 'USER')
+											return '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
+										else
+											return '<a href = "'
+													+ window.contextRoot
+													+ '/add/'
+													+ row.artist
+													+ '/'
+													+ row.album
+													+ '/'
+													+ row.track_no
+													+ '" class="btn btn-outline-success btn-sm"> <span class = "fa fa-cart-plus"></span> </a>';
 									}
 								} ]
 					});
@@ -347,7 +350,7 @@ $(function() {
 	if ($alert.length) {
 		setTimeout(function() {
 			$alert.fadeOut('slow');
-		}, 2500)
+		}, 5000)
 	}
 	var $manageAlbumTable = $('#manageAlbums');
 	if ($manageAlbumTable.length) {

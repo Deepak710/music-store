@@ -51,6 +51,10 @@
 				</div>
 			</div>
 			<div class = "row">
+				<script>
+					window.role = '${role}';
+					window.logged = '${logged}';
+				</script>
 				<div class = "col-md-12">
 					<c:if test="${userClickBrowse==true}">
 						<script>

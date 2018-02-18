@@ -18,13 +18,13 @@ public class Cart implements Serializable{
 	@OneToOne
 	@JoinColumn(name = "email")
 	private User u;
+	private double total;
 	public User getU() {
 		return u;
 	}
 	public void setU(User u) {
 		this.u = u;
 	}
-	private double total;
 	public double getTotal() {
 		return total;
 	}
@@ -35,6 +35,5 @@ public class Cart implements Serializable{
 	public String toString() {
 		return "Cart [u=" + u + ", total=" + total + "]";
 	}
-	
 	
 }
