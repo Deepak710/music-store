@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import DMB.PRJ.MusicBack.dao.UserDAO;
-import DMB.PRJ.MusicBack.dto.Cart;
 import DMB.PRJ.MusicBack.dto.User;
 
 @Repository("udao")
@@ -52,18 +51,6 @@ public class UserDAOImpl implements UserDAO {
 	public boolean update(User u) {
 		try {
 			sf.getCurrentSession().update(u);
-			return true;
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
-
-	@Override
-	public boolean updateCart(Cart c) {
-		try {
-			sf.getCurrentSession().update(c);
 			return true;
 		}
 		catch(Exception e) {

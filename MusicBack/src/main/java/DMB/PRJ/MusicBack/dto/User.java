@@ -2,10 +2,8 @@ package DMB.PRJ.MusicBack.dto;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -28,16 +26,6 @@ public class User implements Serializable{
 	@NotBlank(message = "Enter E-Mail Address...")
 	@Email(message = "Enter Valid E-Mail Address")
 	private String email;
-	@OneToOne(mappedBy = "u", cascade = CascadeType.ALL)
-	private Cart c;
-	public Cart getC() {
-		return c;
-	}
-
-	public void setC(Cart c) {
-		this.c = c;
-	}
-
 	public String getName() {
 		return name;
 	}
@@ -87,7 +75,7 @@ public class User implements Serializable{
 	@Override
 	public String toString() {
 		return "User [name=" + name + ", role=" + role + ", password=" + password + ", enabled=" + enabled
-				+ ", address=" + address + ", phone=" + phone + ", email=" + email + ", c=" + c + "]";
+				+ ", address=" + address + ", phone=" + phone + ", email=" + email + "]";
 	}
 	
 }

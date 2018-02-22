@@ -35,7 +35,6 @@
 						<th>Track Number</th>
 						<th>Song Name</th>
 						<th>Rate</th>
-						<th>Rating</th>
 						<th></th>
 						<th></th>
 					</tr>
@@ -45,7 +44,6 @@
 						<th>Track Number</th>
 						<th>Song Name</th>
 						<th>Rate</th>
-						<th>Rating</th>
 						<th></th>
 						<th></th>
 					</tr>

@@ -54,7 +54,6 @@
 								<button type="submit" id="submit" class="btn btn-outline-success btn-lg">Submit</button>
 							</div>
 							<div class = "form-group">
-								<sf:hidden path="rating"/>
 								<sf:hidden path="bought"/>
 								<sf:hidden path="preview"/>
 								<sf:hidden path="track_no"/>

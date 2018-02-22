@@ -1,13 +1,13 @@
 package DMB.PRJ.MusicBack.dto;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Cart implements Serializable{
@@ -15,15 +15,16 @@ public class Cart implements Serializable{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
-	@OneToOne
-	@JoinColumn(name = "email")
-	private User u;
+	private String email;
+	private String path;
 	private double total;
-	public User getU() {
-		return u;
+	private boolean active = true;
+	private String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+	public boolean isActive() {
+		return active;
 	}
-	public void setU(User u) {
-		this.u = u;
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	public double getTotal() {
 		return total;
@@ -31,9 +32,28 @@ public class Cart implements Serializable{
 	public void setTotal(double total) {
 		this.total = total;
 	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
+	public String getPath() {
+		return path;
+	}
+	public void setPath(String path) {
+		this.path = path;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
 	@Override
 	public String toString() {
-		return "Cart [u=" + u + ", total=" + total + "]";
+		return "Cart [id=" + id + ", email=" + email + ", path=" + path + ", total=" + total + ", active=" + active
+				+ ", date=" + date + "]";
 	}
 	
 }

@@ -9,7 +9,6 @@ public interface UserDAO {
 	List<User> list();
 	User get(String email);
 	boolean add(User u);
-	boolean updateCart(Cart c);
 	boolean update(User u);
 	String loggedUser();
 	String loggedUserRole();

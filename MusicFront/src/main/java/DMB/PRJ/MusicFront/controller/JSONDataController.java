@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import DMB.PRJ.MusicBack.dao.AlbumDAO;
 import DMB.PRJ.MusicBack.dao.ArtistDAO;
+import DMB.PRJ.MusicBack.dao.CartDAO;
 import DMB.PRJ.MusicBack.dao.GenreDAO;
 import DMB.PRJ.MusicBack.dao.SongDAO;
 import DMB.PRJ.MusicBack.dto.Album;
 import DMB.PRJ.MusicBack.dto.Artist;
+import DMB.PRJ.MusicBack.dto.Cart;
 import DMB.PRJ.MusicBack.dto.Genre;
 import DMB.PRJ.MusicBack.dto.Song;
 
@@ -28,6 +30,8 @@ public class JSONDataController {
 	private GenreDAO gdao;
 	@Autowired
 	private SongDAO sdao;
+	@Autowired
+	private CartDAO cdao;
 	@RequestMapping("/all/album")
 	@ResponseBody
 	public List<Album> getAllAlbums() {
@@ -105,4 +109,61 @@ public class JSONDataController {
 	public List<Song> manageAlbumSongs(@PathVariable("artist") String artist, @PathVariable("album") String album) {
 		return sdao.listAlbumSongs(album, artist);
 	}
+	@RequestMapping("{email}/cart/bought/songs")
+	@ResponseBody
+	public List<Song> manageBoughtSongs(@PathVariable("email") String email) {
+		List<Cart> clist = cdao.listBoughtSongs(email);
+		List<Song> slist = sdao.listAllSongs();
+		slist.clear();
+		for(Cart c:clist) {
+			String path = c.getPath();
+			String [] strList = path.split("/");
+			Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
+			slist.add(s);
+		}
+		return slist;
+	}
+	@RequestMapping("{email}/cart/bought/albums")
+	@ResponseBody
+	public List<Album> manageBoughtAlbums(@PathVariable("email") String email) {
+		List<Cart> clist = cdao.listBoughtAlbums(email);
+		List<Album> alist = albdao.listAllAlbums();
+		alist.clear();
+		for(Cart c:clist) {
+			String path = c.getPath();
+			String [] strList = path.split("/");
+			Album a = albdao.get(strList[0], strList[1]);
+			alist.add(a);
+		}
+		return alist;
+	}
+	@RequestMapping("{email}/cart/songs")
+	@ResponseBody
+	public List<Song> manageCartSongs(@PathVariable("email") String email) {
+		List<Cart> clist =  cdao.listSongs(email);
+		List<Song> slist = sdao.listAllSongs();
+		slist.clear();
+		for(Cart c:clist) {
+			String path = c.getPath();
+			String [] strList = path.split("/");
+			Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
+			slist.add(s);
+		}
+		return slist;
+	}
+	@RequestMapping("{email}/cart/albums")
+	@ResponseBody
+	public List<Album> manageCartAlbums(@PathVariable("email") String email) {
+		List<Cart> clist = cdao.listAlbums(email);
+		List<Album> alist = albdao.listAllAlbums();
+		alist.clear();
+		for(Cart c:clist) {
+			String path = c.getPath();
+			String [] strList = path.split("/");
+			Album a = albdao.get(strList[0], strList[1]);
+			alist.add(a);
+		}
+		return alist;
+	}
+	
 }

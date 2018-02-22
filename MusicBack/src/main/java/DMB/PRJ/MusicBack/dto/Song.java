@@ -26,7 +26,6 @@ public class Song implements Serializable {
 	private String album;
 	@Id
 	private String artist;
-	private int rating=0;
 	private int bought=0;
 	@Transient
 	private MultipartFile file; 
@@ -72,12 +71,6 @@ public class Song implements Serializable {
 	public void setArtist(String artist) {
 		this.artist = artist;
 	}
-	public int getRating() {
-		return rating;
-	}
-	public void setRating(int rating) {
-		this.rating = rating;
-	}
 	public int getBought() {
 		return bought;
 	}
@@ -87,6 +80,7 @@ public class Song implements Serializable {
 	@Override
 	public String toString() {
 		return "Song [name=" + name + ", track_no=" + track_no + ", rate=" + rate + ", preview=" + preview + ", album="
-				+ album + ", artist=" + artist + ", rating=" + rating + ", bought=" + bought + "]";
+				+ album + ", artist=" + artist + ", bought=" + bought + ", file=" + file + "]";
 	}
+	
 }

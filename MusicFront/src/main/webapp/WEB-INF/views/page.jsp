@@ -47,6 +47,9 @@
 			<c:if test="${userClickHome == true}">
 				<%@include file="./shared/home.jsp"%>
 			</c:if>
+			<c:if test="${userClickCart == true}">
+				<%@include file="./shared/cart.jsp"%>
+			</c:if>
 			<c:if test="${userClickLogin == true}">
 				<%@include file="./shared/login.jsp"%>
 			</c:if>

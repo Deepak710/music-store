@@ -71,4 +71,11 @@ public class SongDAOImpl implements SongDAO {
 		return q.getResultList();
 	}
 
+	@Override
+	public List<Song> listAllSongs() {
+		String select = "FROM Song";
+		Query q = sf.getCurrentSession().createQuery(select);
+		return q.getResultList();
+	}
+
 }

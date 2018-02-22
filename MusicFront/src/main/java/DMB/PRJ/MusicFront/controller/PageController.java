@@ -1,5 +1,8 @@
 package DMB.PRJ.MusicFront.controller;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -12,11 +15,13 @@ import org.springframework.web.servlet.ModelAndView;
 
 import DMB.PRJ.MusicBack.dao.AlbumDAO;
 import DMB.PRJ.MusicBack.dao.ArtistDAO;
+import DMB.PRJ.MusicBack.dao.CartDAO;
 import DMB.PRJ.MusicBack.dao.GenreDAO;
 import DMB.PRJ.MusicBack.dao.SongDAO;
 import DMB.PRJ.MusicBack.dao.UserDAO;
 import DMB.PRJ.MusicBack.dto.Album;
 import DMB.PRJ.MusicBack.dto.Artist;
+import DMB.PRJ.MusicBack.dto.Cart;
 import DMB.PRJ.MusicBack.dto.Genre;
 import DMB.PRJ.MusicBack.dto.Song;
 import DMB.PRJ.MusicBack.dto.User;
@@ -35,6 +40,8 @@ public class PageController {
 	private SongDAO sdao;
 	@Autowired
 	private UserDAO udao;
+	@Autowired
+	private CartDAO cdao;
 	@RequestMapping(value = {"/", "/home"})
 	public ModelAndView home() {
 		l.info("Inside Home Page; PageController.java home() method - INFO");
@@ -70,6 +77,24 @@ public class PageController {
 		c.setEnabled(false);
 		udao.update(c);
 		
+		return mv;
+	}
+	
+	@RequestMapping(value="/cart")
+	public ModelAndView cart() {
+		l.info("Inside Cart Page; PageController.java cart() method - INFO");
+		l.debug("Inside Cart Page; PageController.java cart() method - DEBUG");
+		ModelAndView mv=new ModelAndView("page");
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			mv.addObject("email", u.getEmail());
+			mv.addObject("title", u.getName() + " Cart");
+			mv.addObject("name", u.getName());
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		mv.addObject("userClickCart", true);
 		return mv;
 	}
 	@RequestMapping(value="/all/album")
@@ -187,6 +212,123 @@ public class PageController {
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		
+		return mv;
+	}
+	@RequestMapping(value="/add/{artist}/{album}")
+	public ModelAndView cartAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+		ModelAndView mv=new ModelAndView("redirect:/view/" + artist + "/" + album);
+		mv.addObject("userClickAlbum", true);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			Cart c = new Cart();
+			c.setEmail(u.getEmail());
+			c.setPath(artist + "/" + album);
+			List<Song> slist = sdao.listAlbumSongs(album, artist);
+			int rate = 0;
+			for(Song s : slist) {
+				rate += s.getRate();
+			}
+			rate -= rate * 0.1;
+			c.setTotal(rate);
+			cdao.add(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
+		return mv;
+	}
+	@RequestMapping(value="/add/{artist}/{album}/{track}")
+	public ModelAndView cartSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+		ModelAndView mv=new ModelAndView("redirect:/view/" + artist + "/" + album);
+		mv.addObject("userClickAlbum", true);
+
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			Cart c = new Cart();
+			c.setEmail(u.getEmail());
+			c.setPath(artist + "/" + album + "/" + track);
+			c.setTotal(sdao.get(artist, album, track).getRate());
+			cdao.add(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		
+		return mv;
+	}
+	@RequestMapping(value="/buy/{artist}/{album}")
+	public ModelAndView buyAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			Cart c = cdao.get(u.getEmail(), artist + "/" + album);
+			c.setActive(false);
+			List<Song> slist = sdao.listAlbumSongs(album, artist);
+			for(Song s : slist) {
+				s.setBought(s.getBought()+1);
+				sdao.update(s);
+			}
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			c.setDate(dateFormat.format(date));
+			cdao.update(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/remove/{artist}/{album}")
+	public ModelAndView removeAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			Cart c = cdao.get(u.getEmail(), artist + "/" + album);
+			cdao.delete(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/buy/{artist}/{album}/{track}")
+	public ModelAndView buySong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			Cart c = cdao.get(u.getEmail(), artist + "/" + album + "/" + track);
+			Song s = sdao.get(artist, album, track);
+			s.setBought(s.getBought()+1);
+			sdao.update(s);
+			l.info(c.getPath());
+			c.setActive(false);
+			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+			Date date = new Date();
+			c.setDate(dateFormat.format(date));
+			cdao.update(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/remove/{artist}/{album}/{track}")
+	public ModelAndView removeSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			Cart c = cdao.get(u.getEmail(), artist + "/" + album + "/" + track);
+			cdao.delete(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
 		return mv;
 	}
 }
