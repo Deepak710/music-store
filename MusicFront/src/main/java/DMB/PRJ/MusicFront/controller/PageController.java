@@ -59,6 +59,26 @@ public class PageController {
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		
+		mv.addObject("trendingalbumpic", albdao.trendingAlbumPic());
+		mv.addObject("trendingalbum", albdao.trendingAlbumArtist() + "\'s " + albdao.trendingAlbumName());
+		mv.addObject("trendingalbumlink", "view/" + albdao.trendingAlbumArtist() + "/" + albdao.trendingAlbumName());
+		mv.addObject("latestalbumpic", albdao.latestAlbumPic());
+		mv.addObject("latestalbum", albdao.latestAlbumArtist() + "\'s " + albdao.latestAlbumName());
+		mv.addObject("latestalbumlink", "view/" + albdao.latestAlbumArtist() + "/" + albdao.latestAlbumName());
+		mv.addObject("trendingsongpic", "album-" + sdao.trendingSongAlbum().toLowerCase() + "-" + sdao.trendingSongArtist().toLowerCase() + ".jpg");
+		mv.addObject("trendingsong", sdao.trendingSongNumber() + ". " + sdao.trendingSongName() + " from " + sdao.trendingSongArtist() + "\'s " + sdao.trendingSongAlbum());
+		mv.addObject("trendingsonglink", "view/" + sdao.trendingSongArtist() + "/" + sdao.trendingSongAlbum());
+		mv.addObject("latestsongpic", "album-" + sdao.latestSongAlbum().toLowerCase() + "-" + sdao.latestSongArtist().toLowerCase() + ".jpg");
+		mv.addObject("latestsong", sdao.latestSongNumber() + ". " + sdao.latestSongName() + " from " + sdao.latestSongArtist() + "\'s " + sdao.latestSongAlbum());
+		mv.addObject("latestsonglink", "view/" + sdao.latestSongArtist() + "/" + sdao.latestSongAlbum());
+		mv.addObject("topartistpic", artdao.topArtistPic());
+		mv.addObject("topartist", artdao.topArtist());
+		mv.addObject("topartistlink", "artist/" + artdao.topArtist() + "/album");
+		mv.addObject("topgenrepic", gdao.topGenrePic());
+		mv.addObject("topgenre", gdao.topGenre());
+		mv.addObject("topgenrelink", "genre/" + gdao.topGenre() + "/album");
+		
+		
 		return mv;
 	}
 	@RequestMapping(value = {"/signout"})
@@ -226,13 +246,7 @@ public class PageController {
 			Cart c = new Cart();
 			c.setEmail(u.getEmail());
 			c.setPath(artist + "/" + album);
-			List<Song> slist = sdao.listAlbumSongs(album, artist);
-			int rate = 0;
-			for(Song s : slist) {
-				rate += s.getRate();
-			}
-			rate -= rate * 0.1;
-			c.setTotal(rate);
+			c.setTotal(albdao.get(artist, album).getRate());
 			cdao.add(c);
 		}
 		mv.addObject("role", udao.loggedUserRole());
@@ -276,7 +290,33 @@ public class PageController {
 			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 			Date date = new Date();
 			c.setDate(dateFormat.format(date));
+			c.setTotal(albdao.get(artist, album).getRate());
 			cdao.update(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/buy/all/albums")
+	public ModelAndView buyAllAlbums() {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			List<Cart> clist = cdao.listAlbums(u.getEmail()); 
+			for(Cart c:clist) {
+				c.setActive(false);
+				String [] strList = c.getPath().split("/");
+				List<Song> slist = sdao.listAlbumSongs(strList[0], strList[1]);
+				for(Song s : slist) {
+					s.setBought(s.getBought()+1);
+					sdao.update(s);
+				}
+				c.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+				c.setTotal(albdao.get(strList[0], strList[1]).getRate());
+				cdao.update(c);
+			}
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;
@@ -295,6 +335,20 @@ public class PageController {
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;
 	}
+	@RequestMapping(value="/remove/all/albums")
+	public ModelAndView removeAllAlbums() {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			List<Cart> clist = cdao.listAlbums(u.getEmail()); 
+			for(Cart c:clist) cdao.delete(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
 	@RequestMapping(value="/buy/{artist}/{album}/{track}")
 	public ModelAndView buySong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
@@ -307,12 +361,33 @@ public class PageController {
 			Song s = sdao.get(artist, album, track);
 			s.setBought(s.getBought()+1);
 			sdao.update(s);
-			l.info(c.getPath());
 			c.setActive(false);
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = new Date();
-			c.setDate(dateFormat.format(date));
+			c.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+			c.setTotal(sdao.get(artist, album, track).getRate());
 			cdao.update(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/buy/all/songs")
+	public ModelAndView buyAllSongs() {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			List<Cart> clist = cdao.listSongs(u.getEmail()); 
+			for(Cart c:clist) {
+				String [] strList = c.getPath().split("/");
+				Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
+				s.setBought(s.getBought()+1);
+				sdao.update(s);
+				c.setActive(false);
+				c.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+				c.setTotal(sdao.get(strList[0], strList[1], Integer.parseInt(strList[2])).getRate());
+				cdao.update(c);
+			}
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;
@@ -327,6 +402,20 @@ public class PageController {
 			mv.addObject("logged", u.getName());
 			Cart c = cdao.get(u.getEmail(), artist + "/" + album + "/" + track);
 			cdao.delete(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/remove/all/songs")
+	public ModelAndView removeAllSongs() {
+		ModelAndView mv=new ModelAndView("redirect:/cart");
+		mv.addObject("userClickCart", true);
+		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			List<Cart> clist = cdao.listSongs(u.getEmail()); 
+			for(Cart c:clist) cdao.delete(c);
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;

@@ -10,4 +10,13 @@ public interface SongDAO {
 	Song get(String artist, String album, int track);
 	boolean add(Song s);
 	boolean update(Song s);
+	
+	String latestSongName();
+	String latestSongArtist();
+	String latestSongAlbum();
+	String latestSongNumber();
+	String trendingSongName();
+	String trendingSongArtist();
+	String trendingSongAlbum();
+	String trendingSongNumber();
 }

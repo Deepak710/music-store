@@ -17,7 +17,7 @@ public class Cart implements Serializable{
 	private int id;
 	private String email;
 	private String path;
-	private double total;
+	private int total;
 	private boolean active = true;
 	private String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	public boolean isActive() {
@@ -26,10 +26,10 @@ public class Cart implements Serializable{
 	public void setActive(boolean active) {
 		this.active = active;
 	}
-	public double getTotal() {
+	public int getTotal() {
 		return total;
 	}
-	public void setTotal(double total) {
+	public void setTotal(int total) {
 		this.total = total;
 	}
 	public String getDate() {

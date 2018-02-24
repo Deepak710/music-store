@@ -68,4 +68,20 @@ public class ArtistDAOImpl implements ArtistDAO {
 			return false;
 		}
 	}
+	@Override
+	public String topArtistPic() {
+		String select = "SELECT pic FROM Artist WHERE view = (SELECT MAX(view) FROM Artist WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+	@Override
+	public String topArtist() {
+		String select = "SELECT name FROM Artist WHERE view = (SELECT MAX(view) FROM Artist WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
 }

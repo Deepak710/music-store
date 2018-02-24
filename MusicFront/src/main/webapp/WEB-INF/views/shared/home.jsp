@@ -17,13 +17,13 @@
 		<div class="row align-items-center">
 			<div class="col-lg-6 order-lg-2">
 				<div class="p-5">
-					<img class="img-fluid rounded-circle" src="${images}/01.jpg" alt="">
+					<a href = "${contextRoot}/${latestalbumlink}"><img class="img-fluid rounded-circle" src="${images}/${latestalbumpic}" alt=""></a>
 				</div>
 			</div>
 			<div class="col-lg-6 order-lg-1">
 				<div class="p-5">
-					<h2 class="display-4">Top Artist</h2>
-					<p>Artist Name</p>
+					<h2 class="display-4">Latest Album</h2>
+					<p>${latestalbum}</p>
 				</div>
 			</div>
 		</div>
@@ -35,13 +35,13 @@
 		<div class="row align-items-center">
 			<div class="col-lg-6">
 				<div class="p-5">
-					<img class="img-fluid rounded-circle" src="${images}/02.jpg" alt="">
+					<a href = "${contextRoot}/${trendingalbumlink}"><img class="img-fluid rounded-circle" src="${images}/${trendingalbumpic}" alt=""></a>
 				</div>
 			</div>
 			<div class="col-lg-6">
 				<div class="p-5">
 					<h2 class="display-4">Top Album</h2>
-					<p>Album Name</p>
+					<p>${trendingalbum}</p>
 				</div>
 			</div>
 		</div>
@@ -53,13 +53,13 @@
 		<div class="row align-items-center">
 			<div class="col-lg-6 order-lg-2">
 				<div class="p-5">
-					<img class="img-fluid rounded-circle" src="${images}/03.jpg" alt="">
+					<a href = "${contextRoot}/${latestsonglink}"><img class="img-fluid rounded-circle" src="${images}/${latestsongpic}" alt=""></a>
 				</div>
 			</div>
 			<div class="col-lg-6 order-lg-1">
 				<div class="p-5">
-					<h2 class="display-4">Top Genre</h2>
-					<p>Genre Name</p>
+					<h2 class="display-4">Latest Song</h2>
+					<p>${latestsong}</p>
 				</div>
 			</div>
 		</div>
@@ -71,13 +71,49 @@
 		<div class="row align-items-center">
 			<div class="col-lg-6">
 				<div class="p-5">
-					<img class="img-fluid rounded-circle" src="${images}/01.jpg" alt="">
+					<a href = "${contextRoot}/${trendingsonglink}"><img class="img-fluid rounded-circle" src="${images}/${trendingsongpic}" alt=""></a>
 				</div>
 			</div>
 			<div class="col-lg-6">
 				<div class="p-5">
 					<h2 class="display-4">Top Song</h2>
-					<p>Song Name</p>
+					<p>${trendingsong}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-6 order-lg-2">
+				<div class="p-5">
+					<a href = "${contextRoot}/${topartistlink}"><img class="img-fluid rounded-circle" src="${images}/${topartistpic}" alt=""></a>
+				</div>
+			</div>
+			<div class="col-lg-6 order-lg-1">
+				<div class="p-5">
+					<h2 class="display-4">Top Artist</h2>
+					<p>${topartist}</p>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div class="container">
+		<div class="row align-items-center">
+			<div class="col-lg-6">
+				<div class="p-5">
+					<a href = "${contextRoot}/${topgenrelink}"><img class="img-fluid rounded-circle" src="${images}/${topgenrepic}" alt=""></a>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="p-5">
+					<h2 class="display-4">Top Genre</h2>
+					<p>${topgenre}</p>
 				</div>
 			</div>
 		</div>

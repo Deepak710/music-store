@@ -326,7 +326,16 @@ public class ManagementController {
 		if(s.getPreview().equals("")) {
 			s.setAlbum(album);
 			s.setArtist(artist);
+			List<Song> slist = sdao.listAlbumSongs(album, artist);
 			sdao.add(s);
+			int rate = 0;
+			for(Song song : slist) {
+				rate += song.getRate();
+			}
+			rate -= rate * 0.1;
+			Album a = albdao.get(artist, album);
+			a.setRate(rate);
+			albdao.update(a);
 		}
 		else sdao.update(s);
 		if (!s.getFile().getOriginalFilename().equals("")) {

@@ -11,4 +11,7 @@ public interface ArtistDAO {
 	boolean add(Artist a);
 	boolean update(Artist a);
 	boolean delete(Artist a);
+	
+	String topArtistPic();
+	String topArtist();
 }

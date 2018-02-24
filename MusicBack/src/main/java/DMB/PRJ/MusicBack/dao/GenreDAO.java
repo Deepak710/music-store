@@ -11,4 +11,7 @@ public interface GenreDAO {
 	boolean add(Genre g);
 	boolean update(Genre g);
 	boolean delete(Genre g);
+	
+	String topGenrePic();
+	String topGenre();
 }

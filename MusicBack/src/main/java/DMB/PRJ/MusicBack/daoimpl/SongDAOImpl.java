@@ -77,5 +77,77 @@ public class SongDAOImpl implements SongDAO {
 		Query q = sf.getCurrentSession().createQuery(select);
 		return q.getResultList();
 	}
+	
+	@Override
+	public String trendingSongName() {
+		String select = "SELECT name FROM Song WHERE bought = (SELECT MAX(bought) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
+	@Override
+	public String trendingSongAlbum() {
+		String select = "SELECT album FROM Song WHERE bought = (SELECT MAX(bought) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
+	@Override
+	public String trendingSongArtist() {
+		String select = "SELECT artist FROM Song WHERE bought = (SELECT MAX(bought) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+	
+	@Override
+	public String trendingSongNumber() {
+		String select = "SELECT track_no FROM Song WHERE bought = (SELECT MAX(bought) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return String.valueOf(l.get(0));
+	}
+
+	@Override
+	public String latestSongName() {
+		String select = "SELECT name FROM Song WHERE date = (SELECT MAX(date) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
+	@Override
+	public String latestSongArtist() {
+		String select = "SELECT artist FROM Song WHERE date = (SELECT MAX(date) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+	
+	@Override
+	public String latestSongAlbum() {
+		String select = "SELECT album FROM Song WHERE date = (SELECT MAX(date) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+	
+	@Override
+	public String latestSongNumber() {
+		String select = "SELECT track_no FROM Song WHERE date = (SELECT MAX(date) FROM Song S WHERE (SELECT active FROM Album WHERE name = S.album AND artist = S.artist) = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return String.valueOf(l.get(0));
+	}
 
 }

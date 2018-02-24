@@ -652,133 +652,6 @@ $(function() {
 					}]
 		});
 	}
-	var $boughtAlbumsTable = $('#boughtAlbums');
-	if ($boughtAlbumsTable.length) {
-		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/bought/albums';
-		console.log(jsonURL);
-		$boughtAlbumsTable
-		.DataTable({
-			lengthMenu : [
-					[ 3, 5, 10, -1 ],
-					[ '3 Albums', '5 Albums', '10 Albums',
-							'All Albums' ] ],
-			pageLength : 5,
-			ajax : {
-				url : jsonURL,
-				dataSrc : ''
-			},
-			columns : [
-					{
-						bSortable : false,
-						data : 'pic',
-						mRender : function(data, type, row) {
-							return '<img src="'
-									+ window.contextRoot
-									+ '/resources/images/' + data
-									+ '" class = "dataTableIMG"/>';
-						}
-					},
-					{
-						data : 'name',
-						mRender : function(data, type, row) {
-							return '<a href = "' + window.contextRoot + '/view/' + row.artist + '/' + row.name + '"> ' + data + '</a>';
-						}
-					},
-					{
-						data : 'artist'
-					},
-					{
-						data : 'genre'
-					},
-					{
-						data : 'lang'
-					},
-					{
-						data : 'name',
-						bSortable : false,
-						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/buy/'+row.artist+'/'+row.name+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
-						}
-					},
-					{
-						data : 'name',
-						bSortable : false,
-						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/buy/'+row.artist+'/'+row.name+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
-						}
-					},
-					{
-						data : 'name',
-						bSortable : false,
-						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/remove/'+row.artist+'/'+row.name+'" class = "btn btn-outline-info btn-sm"> Remove </a>';
-						}
-					}]
-		});
-	}
-	var $boughtSongTable = $('#boughtSongs');
-	if ($boughtSongTable.length) {
-		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/bought/songs';
-		$boughtSongTable
-		.DataTable({
-			lengthMenu : [
-					[ 3, 5, 10, -1 ],
-					[ '3 Songs', '5 Songs', '10 Songs',
-							'All Songs' ] ],
-			pageLength : 5,
-			ajax : {
-				url : jsonURL,
-				dataSrc : ''
-			},
-			columns : [
-					{
-						data : 'artist'
-					},
-					{
-						data : 'album',
-						mRender : function(data, type, row) {
-							return '<a href = "' + window.contextRoot + '/view/' + row.artist + '/' + row.album + '"> ' + data + '</a>';
-						}
-					},
-					{
-						data : 'track_no'
-					},
-					{
-						data : 'name'
-					},
-					{
-						data : 'rate',
-						mRender : function(data, type, row) {
-							return '&#8377; ' + data + '/-';
-						}
-					},
-					{
-						data : 'preview',
-						bSortable : false,
-						mRender : function(data, type, row) {
-							return '<audio class="playback" controls=\'controls\' style="width: 300px;" controlsList="nodownload"><source src="'
-									+ window.contextRoot
-									+ '/resources/audios/'
-									+ data
-									+ '" type="audio/mpeg"></audio>';
-						}
-					},
-					{
-						data : 'name',
-						bSortable : false,
-						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/buy/'+row.artist+'/'+row.album+'/'+row.track_no+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
-						}
-					},
-					{
-						data : 'name',
-						bSortable : false,
-						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/remove/'+row.artist+'/'+row.album+'/'+row.track_no+'" class = "btn btn-outline-info btn-sm"> Remove </a>';
-						}
-					}]
-		});
-	}
 	var $cartAlbumsTable = $('#cartAlbums');
 	if ($cartAlbumsTable.length) {
 		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/albums';
@@ -821,10 +694,9 @@ $(function() {
 						data : 'lang'
 					},
 					{
-						data : 'name',
-						bSortable : false,
+						data : 'rate',
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/buy/'+row.artist+'/'+row.name+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
+							return '&#8377; ' + data + '/-';
 						}
 					},
 					{
@@ -902,6 +774,132 @@ $(function() {
 						bSortable : false,
 						mRender : function(data, type, row) {
 							return '<a href = "'+window.contextRoot+'/remove/'+row.artist+'/'+row.album+'/'+row.track_no+'" class = "btn btn-outline-info btn-sm"> Remove </a>';
+						}
+					}]
+		});
+	}
+	var $boughtAlbumsTable = $('#boughtAlbums');
+	if ($boughtAlbumsTable.length) {
+		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/bought/albums';
+		console.log(jsonURL);
+		$boughtAlbumsTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Albums', '5 Albums', '10 Albums',
+							'All Albums' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+					{
+						bSortable : false,
+						data : 'pic',
+						mRender : function(data, type, row) {
+							return '<img src="'
+									+ window.contextRoot
+									+ '/resources/images/' + data
+									+ '" class = "dataTableIMG"/>';
+						}
+					},
+					{
+						data : 'name',
+						mRender : function(data, type, row) {
+							return '<a href = "' + window.contextRoot + '/view/' + row.artist + '/' + row.name + '"> ' + data + '</a>';
+						}
+					},
+					{
+						data : 'artist'
+					},
+					{
+						data : 'genre'
+					},
+					{
+						data : 'lang'
+					},
+					{
+						data : 'rate',
+						mRender : function(data, type, row) {
+							return '&#8377; ' + data + '/-';
+						}
+					},
+					{
+						data : 'date'
+					},
+					{
+						data : 'date',
+						mRender : function(data, type, row) {
+							var d = new Date(row.date);
+							d.setDate(d.getDate() + 7);
+							if (new Date() >= d)
+								return 'Album was delivered on <br/>' + d;
+							else
+								return 'Album will be delivered on <br/>' + d;
+						}
+					}]
+		});
+	}
+	var $boughtSongTable = $('#boughtSongs');
+	if ($boughtSongTable.length) {
+		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/bought/songs';
+		$boughtSongTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Songs', '5 Songs', '10 Songs',
+							'All Songs' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+					{
+						data : 'artist'
+					},
+					{
+						data : 'album',
+						mRender : function(data, type, row) {
+							return '<a href = "' + window.contextRoot + '/view/' + row.artist + '/' + row.album + '"> ' + data + '</a>';
+						}
+					},
+					{
+						data : 'track_no'
+					},
+					{
+						data : 'name'
+					},
+					{
+						data : 'rate',
+						mRender : function(data, type, row) {
+							return '&#8377; ' + data + '/-';
+						}
+					},
+					{
+						data : 'preview',
+						bSortable : false,
+						mRender : function(data, type, row) {
+							return '<audio class="playback" controls=\'controls\' style="width: 200px;" controlsList="nodownload"><source src="'
+									+ window.contextRoot
+									+ '/resources/audios/'
+									+ data
+									+ '" type="audio/mpeg"></audio>';
+						}
+					},
+					{
+						data : 'date'
+					},
+					{
+						data : 'date',
+						mRender : function(data, type, row) {
+							var d = new Date(row.date);
+							d.setDate(d.getDate() + 7);
+							if (new Date() >= d)
+								return 'Song was delivered on <br/>' + d;
+							else
+								return 'Song will be delivered on <br/>' + d;
 						}
 					}]
 		});

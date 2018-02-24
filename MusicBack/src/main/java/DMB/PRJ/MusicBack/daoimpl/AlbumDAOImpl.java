@@ -107,4 +107,58 @@ public class AlbumDAOImpl implements AlbumDAO {
 				.getResultList();
 	}
 
+	@Override
+	public String trendingAlbumPic() {
+		String select = "SELECT pic FROM Album WHERE view = (SELECT MAX(view) FROM Album WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
+	@Override
+	public String trendingAlbumName() {
+		String select = "SELECT name FROM Album WHERE view = (SELECT MAX(view) FROM Album WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
+	@Override
+	public String trendingAlbumArtist() {
+		String select = "SELECT artist FROM Album WHERE view = (SELECT MAX(view) FROM Album WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+	
+	@Override
+	public String latestAlbumPic() {
+		String select = "SELECT pic FROM Album WHERE date = (SELECT MAX(date) FROM Album WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
+	@Override
+	public String latestAlbumName() {
+		String select = "SELECT name FROM Album WHERE date = (SELECT MAX(date) FROM Album WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
+	@Override
+	public String latestAlbumArtist() {
+		String select = "SELECT artist FROM Album WHERE date = (SELECT MAX(date) FROM Album WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+
 }

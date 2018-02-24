@@ -116,9 +116,10 @@ public class JSONDataController {
 		List<Song> slist = sdao.listAllSongs();
 		slist.clear();
 		for(Cart c:clist) {
-			String path = c.getPath();
-			String [] strList = path.split("/");
+			String [] strList = c.getPath().split("/");
 			Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
+			s.setDate(c.getDate());
+			s.setRate(c.getTotal());
 			slist.add(s);
 		}
 		return slist;
@@ -130,9 +131,10 @@ public class JSONDataController {
 		List<Album> alist = albdao.listAllAlbums();
 		alist.clear();
 		for(Cart c:clist) {
-			String path = c.getPath();
-			String [] strList = path.split("/");
+			String [] strList = c.getPath().split("/");
 			Album a = albdao.get(strList[0], strList[1]);
+			a.setDate(c.getDate());
+			a.setRate(c.getTotal());
 			alist.add(a);
 		}
 		return alist;
@@ -144,8 +146,7 @@ public class JSONDataController {
 		List<Song> slist = sdao.listAllSongs();
 		slist.clear();
 		for(Cart c:clist) {
-			String path = c.getPath();
-			String [] strList = path.split("/");
+			String [] strList = c.getPath().split("/");
 			Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
 			slist.add(s);
 		}
@@ -158,8 +159,7 @@ public class JSONDataController {
 		List<Album> alist = albdao.listAllAlbums();
 		alist.clear();
 		for(Cart c:clist) {
-			String path = c.getPath();
-			String [] strList = path.split("/");
+			String [] strList = c.getPath().split("/");
 			Album a = albdao.get(strList[0], strList[1]);
 			alist.add(a);
 		}

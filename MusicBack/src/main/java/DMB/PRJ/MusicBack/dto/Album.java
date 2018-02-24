@@ -1,6 +1,8 @@
 package DMB.PRJ.MusicBack.dto;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -28,6 +30,8 @@ public class Album implements Serializable{
 	@JsonIgnore
 	private int view = 0;
 	private int songs = 0;
+	private int rate = 0;
+	private String date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 	@Transient
 	private MultipartFile file; 
 	public MultipartFile getFile() {
@@ -84,9 +88,22 @@ public class Album implements Serializable{
 	public void setSongs(int songs) {
 		this.songs = songs;
 	}
+	public int getRate() {
+		return rate;
+	}
+	public void setRate(int rate) {
+		this.rate = rate;
+	}
+	public String getDate() {
+		return date;
+	}
+	public void setDate(String date) {
+		this.date = date;
+	}
 	@Override
 	public String toString() {
 		return "Album [name=" + name + ", pic=" + pic + ", artist=" + artist + ", genre=" + genre + ", lang=" + lang
-				+ ", active=" + active + ", view=" + view + ", songs=" + songs + "]";
+				+ ", active=" + active + ", view=" + view + ", songs=" + songs + ", rate=" + rate + ", date=" + date
+				+ ", file=" + file + "]";
 	}
 }

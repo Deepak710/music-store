@@ -68,4 +68,20 @@ public class GenreDAOImpl implements GenreDAO {
 			return false;
 		}
 	}
+	@Override
+	public String topGenrePic() {
+		String select = "SELECT pic FROM Genre WHERE view = (SELECT MAX(view) FROM Genre WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
+	@Override
+	public String topGenre() {
+		String select = "SELECT name FROM Genre WHERE view = (SELECT MAX(view) FROM Genre WHERE active = :active)";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("active", true);
+		List l = q.list();
+		return (String) l.get(0);
+	}
 }
