@@ -29,6 +29,7 @@ import DMB.PRJ.MusicBack.dto.Artist;
 import DMB.PRJ.MusicBack.dto.Genre;
 import DMB.PRJ.MusicBack.dto.Song;
 import DMB.PRJ.MusicBack.dto.User;
+import DMB.PRJ.MusicFront.exception.EntityNotFoundException;
 import DMB.PRJ.MusicFront.util.FileUploadUtility;
 import DMB.PRJ.MusicFront.validator.AlbumValidator;
 import DMB.PRJ.MusicFront.validator.ArtistValidator;
@@ -75,7 +76,10 @@ public class ManagementController {
 			if (o.equals("album"))
 				mv.addObject("message", "Album Submitted Successfully!");
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -92,8 +96,11 @@ public class ManagementController {
 			m.addAttribute("userClickManageAlbums", true);
 			m.addAttribute("title", "Manage Albums");
 			m.addAttribute("message", "Album Release Failed!!!");
-			
-			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+
+			if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+				m.addAttribute("logged", udao.loggedUser());
+				return "redirect:/home";
+			}
 			else {
 				User u1 = udao.get(udao.loggedUser());
 				m.addAttribute("logged", u1.getName());
@@ -103,7 +110,12 @@ public class ManagementController {
 			return "page";
 		}
 		if(a.getPic().equals("")) albdao.add(a);
-		else albdao.update(a);
+		else if (albdao.update(a) == false) {
+			m.addAttribute("userClickManageAlbums", true);
+			m.addAttribute("title", "Manage Albums");
+			m.addAttribute("message", "Cannot Change Name [or] Artist of the Album");
+			return "page";
+		}
 		if (!a.getFile().getOriginalFilename().equals("")) {
 			FileUploadUtility.uploadPic(req, a.getFile(), a.getPic());
 		}
@@ -112,7 +124,11 @@ public class ManagementController {
 	}
 	@RequestMapping(value="/{artist}/{album}/activation", method=RequestMethod.POST)
 	@ResponseBody
-	public String handleAlbumActivation(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+	public String handleAlbumActivation(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			new ModelAndView("redirect:/home");
+		}
+		if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album...");
 		Album alb = albdao.get(artist, album);
 		boolean active = alb.isActive();
 		alb.setActive(!active);
@@ -120,14 +136,18 @@ public class ManagementController {
 		return active ? artist + "'s " + album + " Was successfully Broken!" : artist + "'s " + album + " Was successfully Restored!" ;
 	}
 	@RequestMapping(value="/{artist}/{album}", method=RequestMethod.GET)
-	public ModelAndView manageAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+	public ModelAndView manageAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("userClickManageAlbums", true);
 		mv.addObject("title", "Manage " + artist + " " + album );
+		if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album...");
 		Album alb = albdao.get(artist, album);
 		mv.addObject("album", alb);
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -148,7 +168,10 @@ public class ManagementController {
 			if (o.equals("artist"))
 				mv.addObject("message", "Artist Submitted Successfully!");
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -165,8 +188,11 @@ public class ManagementController {
 			m.addAttribute("userClickManageArtists", true);
 			m.addAttribute("title", "Manage Artists");
 			m.addAttribute("message", "Artist Creation Failed!!!");
-			
-			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+
+			if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+				m.addAttribute("logged", udao.loggedUser());
+				return "redirect:/home";
+			}
 			else {
 				User u1 = udao.get(udao.loggedUser());
 				m.addAttribute("logged", u1.getName());
@@ -176,7 +202,12 @@ public class ManagementController {
 			return "page";
 		}
 		if(a.getPic().equals("")) artdao.add(a);
-		else artdao.update(a);
+		else if (artdao.update(a) == false) {
+			m.addAttribute("userClickManageArtists", true);
+			m.addAttribute("title", "Manage Artists");
+			m.addAttribute("message", "Cannot Change the Name of the Artist");
+			return "page";
+		}
 		if (!a.getFile().getOriginalFilename().equals("")) {
 			FileUploadUtility.uploadPic(req, a.getFile(), a.getPic());
 		}
@@ -185,7 +216,11 @@ public class ManagementController {
 	}
 	@RequestMapping(value="/artist/{name}/activation", method=RequestMethod.POST)
 	@ResponseBody
-	public String handleArtistActivation(@PathVariable("name") String name) {
+	public String handleArtistActivation(@PathVariable("name") String name) throws EntityNotFoundException {
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			return "redirect:/home";
+		}
+		if (artdao.get(name) == null) throw new EntityNotFoundException("Unspecified Artist...");
 		Artist a = artdao.get(name);
 		boolean active = a.isActive();
 		a.setActive(!active);
@@ -193,14 +228,18 @@ public class ManagementController {
 		return active ? name + " Was successfully Killed!" : name + " Was successfully Re-Animated!" ;
 	}
 	@RequestMapping(value="/artist/{name}", method=RequestMethod.GET)
-	public ModelAndView manageArtist(@PathVariable("name") String name) {
+	public ModelAndView manageArtist(@PathVariable("name") String name) throws EntityNotFoundException {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("userClickManageArtists", true);
 		mv.addObject("title", "Manage " + name + " Artist");
+		if (artdao.get(name) == null) throw new EntityNotFoundException("Unspecified Artist...");
 		Artist a = artdao.get(name);
 		mv.addObject("artist", a);
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -221,7 +260,10 @@ public class ManagementController {
 			if (o.equals("genre"))
 				mv.addObject("message", "Genre Submitted Successfully!");
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -238,8 +280,11 @@ public class ManagementController {
 			m.addAttribute("userClickManageGenres", true);
 			m.addAttribute("title", "Manage Genres");
 			m.addAttribute("message", "Genre Adddition Failed!!!");
-			
-			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+
+			if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+				m.addAttribute("logged", udao.loggedUser());
+				return "redirect:/home";
+			}
 			else {
 				User u1 = udao.get(udao.loggedUser());
 				m.addAttribute("logged", u1.getName());
@@ -249,7 +294,12 @@ public class ManagementController {
 			return "page";
 		}
 		if(g.getPic().equals("")) gdao.add(g);
-		else gdao.update(g);
+		else if (gdao.update(g) == false) {
+			m.addAttribute("userClickManageGenres", true);
+			m.addAttribute("title", "Manage Genres");
+			m.addAttribute("message", "Cannot Change the Name of the Genre");
+			return "page";
+		}
 		if (!g.getFile().getOriginalFilename().equals("")) {
 			FileUploadUtility.uploadPic(req, g.getFile(), g.getPic());
 		}
@@ -258,7 +308,8 @@ public class ManagementController {
 	}
 	@RequestMapping(value="/genre/{name}/activation", method=RequestMethod.POST)
 	@ResponseBody
-	public String handleGenreActivation(@PathVariable("name") String name) {
+	public String handleGenreActivation(@PathVariable("name") String name) throws EntityNotFoundException {
+		if (gdao.get(name) == null) throw new EntityNotFoundException("Unspecified Genre...");
 		Genre g = gdao.get(name);
 		boolean active = g.isActive();
 		g.setActive(!active);
@@ -266,14 +317,18 @@ public class ManagementController {
 		return active ? name + " Was successfully Phased Out!" : name + " Was successfully Phased In!" ;
 	}
 	@RequestMapping(value="/genre/{name}", method=RequestMethod.GET)
-	public ModelAndView manageGenre(@PathVariable("name") String name) {
+	public ModelAndView manageGenre(@PathVariable("name") String name) throws EntityNotFoundException {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("userClickManageGenres", true);
 		mv.addObject("title", "Manage " + name + " Genre");
+		if (gdao.get(name) == null) throw new EntityNotFoundException("Unspecified Genre...");
 		Genre g = gdao.get(name);
 		mv.addObject("genre", g);
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -296,7 +351,10 @@ public class ManagementController {
 			if (o.equals("song"))
 				mv.addObject("message", "Song Submitted Successfully!");
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -306,15 +364,18 @@ public class ManagementController {
 		return mv;
 	}
 	@RequestMapping(value="/{artist}/{album}/songs", method=RequestMethod.POST)
-	public String handleNewSong(@Valid @ModelAttribute("song") Song s, BindingResult r, Model m, HttpServletRequest req, @PathVariable("album") String album, @PathVariable("artist") String artist) {
+	public String handleNewSong(@Valid @ModelAttribute("song") Song s, BindingResult r, Model m, HttpServletRequest req, @PathVariable("album") String album, @PathVariable("artist") String artist) throws EntityNotFoundException {
 		if(s.getPreview().equals("")) new SongValidator().validate(s, r);
 		else if(!s.getFile().getOriginalFilename().equals("")) new SongValidator().validate(s, r);
 		if (r.hasErrors()) {
 			m.addAttribute("userClickManageSongs", true);
 			m.addAttribute("title", "Manage Songs");
 			m.addAttribute("message", "Song Recording Failed!!!");
-			
-			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+
+			if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+				m.addAttribute("logged", udao.loggedUser());
+				return "redirect:/home";
+			}
 			else {
 				User u1 = udao.get(udao.loggedUser());
 				m.addAttribute("logged", u1.getName());
@@ -324,6 +385,7 @@ public class ManagementController {
 			return "page";
 		}
 		if(s.getPreview().equals("")) {
+			if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album...");
 			s.setAlbum(album);
 			s.setArtist(artist);
 			List<Song> slist = sdao.listAlbumSongs(album, artist);
@@ -345,14 +407,18 @@ public class ManagementController {
 		return "redirect:/manage/"+ artist +"/"+ album +"/songs?operation=song";
 	}
 	@RequestMapping(value="/{artist}/{album}/{track}", method=RequestMethod.GET)
-	public ModelAndView manageAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+	public ModelAndView manageAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) throws EntityNotFoundException {
 		ModelAndView mv = new ModelAndView("page");
 		mv.addObject("userClickManageSongs", true);
 		mv.addObject("title", "Manage " + artist + " " + album + " " + track + " Song");
+		if (sdao.get(artist, album, track) == null) throw new EntityNotFoundException("Unspecified Song...");
 		Song s = sdao.get(artist, album, track);
 		mv.addObject("song", s);
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null") || udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -373,7 +439,11 @@ public class ManagementController {
 			if (o.equals("user"))
 				mv.addObject("message", "User Created Successfully!");
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
+		else if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
 		else {
 			User u1 = udao.get(udao.loggedUser());
 			mv.addObject("logged", u1.getName());
@@ -389,7 +459,11 @@ public class ManagementController {
 			m.addAttribute("title", "Sign Up!!!");
 			m.addAttribute("message", "User Creation Failed!!!");
 			
-			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			if(udao.loggedUserRole().equals("USER")) {
+				m.addAttribute("logged", udao.loggedUser());
+				return "redirect:/home";
+			}
+			else if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
 			else {
 				User u1 = udao.get(udao.loggedUser());
 				m.addAttribute("logged", u1.getName());
@@ -418,7 +492,11 @@ public class ManagementController {
 			mv.addObject("message", c.getName() + " Logged in Successfully");
 		}
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUserRole().equals("USER")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
+		else if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
 		else {
 			User u1 = udao.get(udao.loggedUser());
 			mv.addObject("logged", u1.getName());
@@ -437,7 +515,11 @@ public class ManagementController {
 				m.addAttribute("title", "Log In");
 				m.addAttribute("message", "Username or Password is Incorrect");
 				
-				if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+				if(udao.loggedUserRole().equals("USER")) {
+					m.addAttribute("logged", udao.loggedUser());
+					return "redirect:/home";
+				}
+				else if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
 				else {
 					User u1 = udao.get(udao.loggedUser());
 					m.addAttribute("logged", u1.getName());
@@ -452,7 +534,11 @@ public class ManagementController {
 			m.addAttribute("title", "Log In");
 			m.addAttribute("message", "Incorrect Login Credentials");
 			
-			if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
+			if(udao.loggedUserRole().equals("USER")) {
+				m.addAttribute("logged", udao.loggedUser());
+				return "redirect:/home";
+			}
+			else if(udao.loggedUser().equals("null")) m.addAttribute("logged", udao.loggedUser());
 			else {
 				User u1 = udao.get(udao.loggedUser());
 				m.addAttribute("logged", u1.getName());

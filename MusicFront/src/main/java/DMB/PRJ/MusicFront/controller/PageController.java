@@ -86,7 +86,10 @@ public class PageController {
 		ModelAndView mv = new ModelAndView("redirect:/home");
 		mv.addObject("userClickHome", true);
 		
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return mv;
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -105,7 +108,10 @@ public class PageController {
 		l.info("Inside Cart Page; PageController.java cart() method - INFO");
 		l.debug("Inside Cart Page; PageController.java cart() method - DEBUG");
 		ModelAndView mv=new ModelAndView("page");
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -214,15 +220,9 @@ public class PageController {
 		if (alb == null) throw new EntityNotFoundException("Unspecified Album Parameters...");
 		alb.setView(alb.getView()+1);
 		albdao.update(alb);
-		List<Song> slist = sdao.listAlbumSongs(album, artist);
-		int rate = 0;
-		for(Song s : slist) {
-			rate += s.getRate();
-		}
-		rate -= rate * 0.1;
 		mv.addObject("title", artist + " - " + album);
 		mv.addObject("album", alb);
-		mv.addObject("rate", rate);
+		mv.addObject("rate", alb.getRate());
 		mv.addObject("userClickAlbum", true);
 
 		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
@@ -235,17 +235,21 @@ public class PageController {
 		return mv;
 	}
 	@RequestMapping(value="/add/{artist}/{album}")
-	public ModelAndView cartAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+	public ModelAndView cartAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/view/" + artist + "/" + album);
 		mv.addObject("userClickAlbum", true);
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return mv;
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
 			Cart c = new Cart();
 			c.setEmail(u.getEmail());
 			c.setPath(artist + "/" + album);
+			if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album Parameters...");
 			c.setTotal(albdao.get(artist, album).getRate());
 			cdao.add(c);
 		}
@@ -254,17 +258,21 @@ public class PageController {
 		return mv;
 	}
 	@RequestMapping(value="/add/{artist}/{album}/{track}")
-	public ModelAndView cartSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+	public ModelAndView cartSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/view/" + artist + "/" + album);
 		mv.addObject("userClickAlbum", true);
 
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return mv;
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
 			Cart c = new Cart();
 			c.setEmail(u.getEmail());
 			c.setPath(artist + "/" + album + "/" + track);
+			if (sdao.get(artist, album, track) == null) throw new EntityNotFoundException("Unspecified Song Parameters...");
 			c.setTotal(sdao.get(artist, album, track).getRate());
 			cdao.add(c);
 		}
@@ -273,23 +281,25 @@ public class PageController {
 		return mv;
 	}
 	@RequestMapping(value="/buy/{artist}/{album}")
-	public ModelAndView buyAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+	public ModelAndView buyAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/view/" + artist + "/" + album);
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
 			Cart c = cdao.get(u.getEmail(), artist + "/" + album);
 			c.setActive(false);
+			if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album Parameters...");
 			List<Song> slist = sdao.listAlbumSongs(album, artist);
 			for(Song s : slist) {
 				s.setBought(s.getBought()+1);
 				sdao.update(s);
 			}
-			DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-			Date date = new Date();
-			c.setDate(dateFormat.format(date));
+			c.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 			c.setTotal(albdao.get(artist, album).getRate());
 			cdao.update(c);
 		}
@@ -300,7 +310,10 @@ public class PageController {
 	public ModelAndView buyAllAlbums() {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -322,13 +335,17 @@ public class PageController {
 		return mv;
 	}
 	@RequestMapping(value="/remove/{artist}/{album}")
-	public ModelAndView removeAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) {
+	public ModelAndView removeAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/view/" + artist + "/" + album);
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
+			if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album Parameters...");
 			Cart c = cdao.get(u.getEmail(), artist + "/" + album);
 			cdao.delete(c);
 		}
@@ -339,7 +356,10 @@ public class PageController {
 	public ModelAndView removeAllAlbums() {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -350,10 +370,13 @@ public class PageController {
 		return mv;
 	}
 	@RequestMapping(value="/buy/{artist}/{album}/{track}")
-	public ModelAndView buySong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+	public ModelAndView buySong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			new ModelAndView("redirect:/view/" + artist + "/" + album);
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -363,6 +386,7 @@ public class PageController {
 			sdao.update(s);
 			c.setActive(false);
 			c.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+			if (sdao.get(artist, album, track) == null) throw new EntityNotFoundException("Unspecified Song Parameters...");
 			c.setTotal(sdao.get(artist, album, track).getRate());
 			cdao.update(c);
 		}
@@ -373,7 +397,10 @@ public class PageController {
 	public ModelAndView buyAllSongs() {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
@@ -393,13 +420,17 @@ public class PageController {
 		return mv;
 	}
 	@RequestMapping(value="/remove/{artist}/{album}/{track}")
-	public ModelAndView removeSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+	public ModelAndView removeSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/view/" + artist + "/" + album);
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
+			if (sdao.get(artist, album, track) == null) throw new EntityNotFoundException("Unspecified Song Parameters...");
 			Cart c = cdao.get(u.getEmail(), artist + "/" + album + "/" + track);
 			cdao.delete(c);
 		}
@@ -410,7 +441,10 @@ public class PageController {
 	public ModelAndView removeAllSongs() {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickCart", true);
-		if(udao.loggedUser().equals("null")) mv.addObject("logged", udao.loggedUser());
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());

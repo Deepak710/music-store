@@ -44,6 +44,7 @@
 			</div>
 		</div>
 		<div class = "col-md-12 text-right">
+			<br/>
 			<a href="${contextRoot}/buy/all/albums" class="btn btn-outline-success btn-lg">Buy ALL Albums</a>&emsp;
 			<a href="${contextRoot}/remove/all/albums" class="btn btn-outline-warning btn-lg">Remove ALL Albums</a>
 		</div>
@@ -88,6 +89,7 @@
 			</div>
 		</div>
 		<div class = "col-md-12 text-right">
+			<br/>
 			<a href="${contextRoot}/buy/all/songs" class="btn btn-outline-success btn-lg">Buy ALL Songs</a>&emsp;
 			<a href="${contextRoot}/remove/all/songs" class="btn btn-outline-warning btn-lg">Remove ALL Songs</a>
 		</div>

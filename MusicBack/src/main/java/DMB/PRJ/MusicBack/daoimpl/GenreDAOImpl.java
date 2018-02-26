@@ -52,7 +52,6 @@ public class GenreDAOImpl implements GenreDAO {
 			return true;
 		}
 		catch(Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

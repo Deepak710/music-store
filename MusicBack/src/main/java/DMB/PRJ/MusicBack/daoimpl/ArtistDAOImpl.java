@@ -52,7 +52,6 @@ public class ArtistDAOImpl implements ArtistDAO {
 			return true;
 		}
 		catch(Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}

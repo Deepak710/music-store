@@ -44,36 +44,38 @@
 	<div class="wrapper">
 		<%@include file="./shared/navbar.jsp"%>
 		<div class="context">
-			<c:if test="${userClickHome == true}">
-				<%@include file="./shared/home.jsp"%>
-			</c:if>
-			<c:if test="${userClickCart == true}">
-				<%@include file="./shared/cart.jsp"%>
-			</c:if>
-			<c:if test="${userClickLogin == true}">
-				<%@include file="./shared/login.jsp"%>
-			</c:if>
-			<c:if test="${userClickSignup == true}">
-				<%@include file="./shared/signup.jsp"%>
-			</c:if>
-			<c:if test="${userClickBrowse == true or userClickGenre == true or userClickArtist == true or userClickLanguage == true}">
-				<%@include file="./shared/allalbums.jsp"%>
-			</c:if>
-			<c:if test="${userClickAlbum == true}">
-				<%@include file="./shared/singlealbum.jsp" %>
-			</c:if>
-			<c:if test="${userClickManageAlbums == true}">
-				<%@include file="./shared/managealbums.jsp" %>
-			</c:if>
-			<c:if test="${userClickManageArtists == true}">
-				<%@include file="./shared/manageartists.jsp" %>
-			</c:if>
-			<c:if test="${userClickManageGenres == true}">
-				<%@include file="./shared/managegenres.jsp" %>
-			</c:if>
-			<c:if test="${userClickManageSongs == true}">
-				<%@include file="./shared/managesongs.jsp" %>
-			</c:if>
+			<c:choose>
+				<c:when test="${userClickHome == true}">
+					<%@include file="./shared/home.jsp"%>
+				</c:when>
+				<c:when test="${userClickCart == true}">
+					<%@include file="./shared/cart.jsp"%>
+				</c:when>
+				<c:when test="${userClickLogin == true}">
+					<%@include file="./shared/login.jsp"%>
+				</c:when>
+				<c:when test="${userClickSignup == true}">
+					<%@include file="./shared/signup.jsp"%>
+				</c:when>
+				<c:when test="${userClickBrowse == true or userClickGenre == true or userClickArtist == true or userClickLanguage == true}">
+					<%@include file="./shared/allalbums.jsp"%>
+				</c:when>
+				<c:when test="${userClickAlbum == true}">
+					<%@include file="./shared/singlealbum.jsp" %>
+				</c:when>
+				<c:when test="${userClickManageAlbums == true}">
+					<%@include file="./shared/managealbums.jsp" %>
+				</c:when>
+				<c:when test="${userClickManageArtists == true}">
+					<%@include file="./shared/manageartists.jsp" %>
+				</c:when>
+				<c:when test="${userClickManageGenres == true}">
+					<%@include file="./shared/managegenres.jsp" %>
+				</c:when>
+				<c:when test="${userClickManageSongs == true}">
+					<%@include file="./shared/managesongs.jsp" %>
+				</c:when>
+			</c:choose>
 		</div>
 		<br/><br/>
 		<%@include file="./shared/footer.jsp"%>

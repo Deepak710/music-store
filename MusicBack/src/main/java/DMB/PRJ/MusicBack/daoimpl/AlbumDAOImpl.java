@@ -38,7 +38,6 @@ public class AlbumDAOImpl implements AlbumDAO {
 			return true;
 		}
 		catch(Exception e) {
-			e.printStackTrace();
 			return false;
 		}
 	}
