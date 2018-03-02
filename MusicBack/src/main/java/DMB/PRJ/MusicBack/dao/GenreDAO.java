@@ -13,5 +13,6 @@ public interface GenreDAO {
 	boolean delete(Genre g);
 	
 	String topGenrePic();
+	String topGenreDescription();
 	String topGenre();
 }

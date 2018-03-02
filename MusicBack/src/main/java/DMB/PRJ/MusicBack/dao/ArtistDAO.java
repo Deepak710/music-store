@@ -13,5 +13,6 @@ public interface ArtistDAO {
 	boolean delete(Artist a);
 	
 	String topArtistPic();
+	String topArtistBio();
 	String topArtist();
 }

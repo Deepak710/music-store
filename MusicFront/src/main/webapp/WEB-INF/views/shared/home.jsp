@@ -2,7 +2,7 @@
 	<div class="masthead-content">
 		<div class="container">
 			<h1 class="masthead-heading mb-0">Music Store</h1>
-			<h2 class="masthead-subheading mb-0">One Stop Shop for ALL your Vinyl Needs</h2>
+			<h3 class="masthead-subheading mb-0">One Stop Shop for ALL your Vinyl Needs</h3>
 			<a href="${contextRoot}/all/album" class="btn btn-primary btn-xl rounded-pill mt-5">Browse</a>
 		</div>
 	</div>
@@ -95,7 +95,7 @@
 			<div class="col-lg-6 order-lg-1">
 				<div class="p-5">
 					<h2 class="display-4">Top Artist</h2>
-					<p>${topartist}</p>
+					<p>${topartist} <br/> ${topartistbio} </p>
 				</div>
 			</div>
 		</div>
@@ -113,7 +113,7 @@
 			<div class="col-lg-6">
 				<div class="p-5">
 					<h2 class="display-4">Top Genre</h2>
-					<p>${topgenre}</p>
+					<p>${topgenre} <br/> ${topgenredescrition}</p>
 				</div>
 			</div>
 		</div>

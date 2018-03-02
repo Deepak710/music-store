@@ -1,7 +1,7 @@
 package DMB.PRJ.MusicFront.controller;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -72,12 +72,13 @@ public class PageController {
 		mv.addObject("latestsong", sdao.latestSongNumber() + ". " + sdao.latestSongName() + " from " + sdao.latestSongArtist() + "\'s " + sdao.latestSongAlbum());
 		mv.addObject("latestsonglink", "view/" + sdao.latestSongArtist() + "/" + sdao.latestSongAlbum());
 		mv.addObject("topartistpic", artdao.topArtistPic());
+		mv.addObject("topartistbio", artdao.topArtistBio());
 		mv.addObject("topartist", artdao.topArtist());
 		mv.addObject("topartistlink", "artist/" + artdao.topArtist() + "/album");
 		mv.addObject("topgenrepic", gdao.topGenrePic());
+		mv.addObject("topgenredescrition", gdao.topGenreDescription());
 		mv.addObject("topgenre", gdao.topGenre());
 		mv.addObject("topgenrelink", "genre/" + gdao.topGenre() + "/album");
-		
 		
 		return mv;
 	}
@@ -280,6 +281,28 @@ public class PageController {
 		
 		return mv;
 	}
+	@RequestMapping(value="/checkout/{artist}/{album}")
+	public ModelAndView checkoutAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
+		ModelAndView mv=new ModelAndView("page");
+		mv.addObject("userClickCheckout", true);
+		mv.addObject("checkoutalbum", true);
+		mv.addObject("title", "Checkout Album");
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/view/" + artist + "/" + album);
+		}
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			mv.addObject("artist", artist);
+			mv.addObject("album", album);
+			mv.addObject("email", u.getEmail());
+			mv.addObject("rate", albdao.get(artist, album).getRate());
+			mv.addObject("date", LocalDate.now().plusDays(7));
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
 	@RequestMapping(value="/buy/{artist}/{album}")
 	public ModelAndView buyAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
@@ -291,7 +314,7 @@ public class PageController {
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
-			Cart c = cdao.get(u.getEmail(), artist + "/" + album);
+			Cart c = cdao.getActive(u.getEmail(), artist + "/" + album);
 			c.setActive(false);
 			if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album Parameters...");
 			List<Song> slist = sdao.listAlbumSongs(album, artist);
@@ -302,6 +325,33 @@ public class PageController {
 			c.setDate(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
 			c.setTotal(albdao.get(artist, album).getRate());
 			cdao.update(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/checkout/all/albums")
+	public ModelAndView checkoutAlbums() {
+		ModelAndView mv=new ModelAndView("page");
+		mv.addObject("userClickCheckout", true);
+		mv.addObject("checkoutalbums", true);
+		mv.addObject("title", "Checkout Albums");
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			mv.addObject("email", u.getEmail());
+			List<Cart> clist = cdao.listAlbums(u.getEmail());
+			int rate = 0;
+			for(Cart c:clist) {
+				String [] strList = c.getPath().split("/");
+				Album a = albdao.get(strList[0], strList[1]);
+				rate += a.getRate();
+			}
+			mv.addObject("rate", rate);
+			mv.addObject("date", LocalDate.now().plusDays(7));
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;
@@ -346,7 +396,7 @@ public class PageController {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
 			if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album Parameters...");
-			Cart c = cdao.get(u.getEmail(), artist + "/" + album);
+			Cart c = cdao.getActive(u.getEmail(), artist + "/" + album);
 			cdao.delete(c);
 		}
 		mv.addObject("role", udao.loggedUserRole());
@@ -369,6 +419,29 @@ public class PageController {
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;
 	}
+	@RequestMapping(value="/checkout/{artist}/{album}/{track}")
+	public ModelAndView checkoutSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) throws EntityNotFoundException {
+		ModelAndView mv=new ModelAndView("page");
+		mv.addObject("userClickCheckout", true);
+		mv.addObject("checkoutsong", true);
+		mv.addObject("title", "Checkout Song");
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			new ModelAndView("redirect:/view/" + artist + "/" + album);
+		}
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			mv.addObject("artist", artist);
+			mv.addObject("album", album);
+			mv.addObject("track", track);
+			mv.addObject("email", u.getEmail());
+			mv.addObject("rate", sdao.get(artist, album, track).getRate());
+			mv.addObject("date", LocalDate.now().plusDays(7));
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
 	@RequestMapping(value="/buy/{artist}/{album}/{track}")
 	public ModelAndView buySong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) throws EntityNotFoundException {
 		ModelAndView mv=new ModelAndView("redirect:/cart");
@@ -380,7 +453,7 @@ public class PageController {
 		else {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
-			Cart c = cdao.get(u.getEmail(), artist + "/" + album + "/" + track);
+			Cart c = cdao.getActive(u.getEmail(), artist + "/" + album + "/" + track);
 			Song s = sdao.get(artist, album, track);
 			s.setBought(s.getBought()+1);
 			sdao.update(s);
@@ -389,6 +462,33 @@ public class PageController {
 			if (sdao.get(artist, album, track) == null) throw new EntityNotFoundException("Unspecified Song Parameters...");
 			c.setTotal(sdao.get(artist, album, track).getRate());
 			cdao.update(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/checkout/all/songs")
+	public ModelAndView checkoutSongs() {
+		ModelAndView mv=new ModelAndView("page");
+		mv.addObject("userClickCheckout", true);
+		mv.addObject("checkoutsongs", true);
+		mv.addObject("title", "Checkout Songs");
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			new ModelAndView("redirect:/home");
+		}
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			mv.addObject("email", u.getEmail());
+			List<Cart> clist = cdao.listSongs(u.getEmail());
+			int rate = 0;
+			for(Cart c:clist) {
+				String [] strList = c.getPath().split("/");
+				Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
+				rate += s.getRate();
+			}
+			mv.addObject("rate", rate);
+			mv.addObject("date", LocalDate.now().plusDays(7));
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;
@@ -431,7 +531,7 @@ public class PageController {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
 			if (sdao.get(artist, album, track) == null) throw new EntityNotFoundException("Unspecified Song Parameters...");
-			Cart c = cdao.get(u.getEmail(), artist + "/" + album + "/" + track);
+			Cart c = cdao.getActive(u.getEmail(), artist + "/" + album + "/" + track);
 			cdao.delete(c);
 		}
 		mv.addObject("role", udao.loggedUserRole());

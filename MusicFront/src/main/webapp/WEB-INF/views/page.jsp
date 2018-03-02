@@ -4,7 +4,6 @@
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <spring:url var="css" value="/resources/css" />
 <spring:url var="js" value="/resources/js" />
-<spring:url var="fonts" value="/resources/fonts" />
 <spring:url var="images" value="/resources/images" />
 <spring:url var="theme" value="/resources/theme" />
 <spring:url var="audios" value="/resources/audios" />
@@ -27,14 +26,9 @@
 </script>
 <!-- Bootstrap core CSS -->
 <link href="${css}/bootstrap.min.css" rel="stylesheet">
-<link href="${theme}/solar.css" rel="stylesheet">
-
-<!-- Custom fonts for this template -->
-<link href="${fonts}/catamaran.css" rel="stylesheet">
-<link href="${fonts}/lato.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
-<link href="${fonts}/fontawesome-all.css" rel="stylesheet">
+<link href="${theme}/solar.css" rel="stylesheet">
 <link href="${css}/dataTables.bootstrap4.css" rel="stylesheet">
 <link href="${css}/one-page-wonder.min.css" rel="stylesheet">
 
@@ -50,6 +44,9 @@
 				</c:when>
 				<c:when test="${userClickCart == true}">
 					<%@include file="./shared/cart.jsp"%>
+				</c:when>
+				<c:when test="${userClickCheckout == true}">
+					<%@include file="./shared/checkout.jsp"%>
 				</c:when>
 				<c:when test="${userClickLogin == true}">
 					<%@include file="./shared/login.jsp"%>

@@ -3,7 +3,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <spring:url var="css" value="/resources/css" />
-<spring:url var="fonts" value="/resources/fonts" />
 <spring:url var="theme" value="/resources/theme" />
 <c:set var="contextRoot" value="${pageContext.request.contextPath}" />
 <!DOCTYPE html>
@@ -24,13 +23,9 @@
 </script>
 <!-- Bootstrap core CSS -->
 <link href="${css}/bootstrap.min.css" rel="stylesheet">
-<link href="${theme}/solar.css" rel="stylesheet">
-
-<!-- Custom fonts for this template -->
-<link href="${fonts}/catamaran.css" rel="stylesheet">
-<link href="${fonts}/lato.css" rel="stylesheet">
 
 <!-- Custom styles for this template -->
+<link href="${theme}/solar.css" rel="stylesheet">
 <link href="${css}/one-page-wonder.min.css" rel="stylesheet">
 
 </head>
@@ -40,7 +35,7 @@
 		<%@include file="./shared/navbar.jsp"%>
 		<div class="context">
 			<div class="row">
-				<div class="col-md-12">
+				<div class="col-md-12 text-center">
 					<div class="jumbotron">
 						<br/><br/><br/>
 						<h1>${error}</h1>

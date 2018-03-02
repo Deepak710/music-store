@@ -388,8 +388,8 @@ public class ManagementController {
 			if (albdao.get(artist, album) == null) throw new EntityNotFoundException("Unspecified Album...");
 			s.setAlbum(album);
 			s.setArtist(artist);
-			List<Song> slist = sdao.listAlbumSongs(album, artist);
 			sdao.add(s);
+			List<Song> slist = sdao.listAlbumSongs(album, artist);
 			int rate = 0;
 			for(Song song : slist) {
 				rate += song.getRate();

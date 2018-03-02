@@ -55,7 +55,6 @@ $(function() {
 								},
 								{
 									data : 'name',
-									data : 'artist',
 									bSortable : false,
 									mRender : function(data, type, row, meta) {
 										var str = '';
@@ -65,9 +64,9 @@ $(function() {
 												+ row.artist
 												+ '/'
 												+ row.name
-												+ '" class="btn btn-outline-info btn-sm"> <span class = "fas fa-eye"></span> </a> &#160;';
+												+ '" class="btn btn-outline-info btn-sm">View</a> &#160;';
 										if (row.songs < 1 || window.role != 'USER')
-											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
+											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled">Cart</a>';
 										else
 											str += '<a href = "'
 													+ window.contextRoot
@@ -75,7 +74,7 @@ $(function() {
 													+ row.artist
 													+ '/'
 													+ row.name
-													+ '" class="btn btn-outline-success btn-sm"> <span class = "fas fa-cart-plus"></span> </a>';
+													+ '" class="btn btn-outline-success btn-sm">Cart</a>';
 										return str;
 									}
 								} ]
@@ -132,9 +131,9 @@ $(function() {
 												+ row.artist
 												+ '/'
 												+ row.name
-												+ '" class="btn btn-outline-info btn-sm"> <span class = "fas fa-eye"></span> </a> &#160;';
+												+ '" class="btn btn-outline-info btn-sm">View</a> &#160;';
 										if (row.songs < 1 || window.role != 'USER')
-											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
+											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled">Cart</a>';
 										else
 											str += '<a href = "'
 													+ window.contextRoot
@@ -142,7 +141,7 @@ $(function() {
 													+ row.artist
 													+ '/'
 													+ row.name
-													+ '" class="btn btn-outline-success btn-sm"> <span class = "fas fa-cart-plus"></span> </a>';
+													+ '" class="btn btn-outline-success btn-sm">Cart</a>';
 										return str;
 									}
 								} ]
@@ -197,9 +196,9 @@ $(function() {
 												+ row.artist
 												+ '/'
 												+ row.name
-												+ '" class="btn btn-outline-info btn-sm"> <span class = "fas fa-eye"></span> </a> &#160;';
+												+ '" class="btn btn-outline-info btn-sm">View</a> &#160;';
 										if (row.songs < 1 || window.role != 'USER')
-											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
+											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled">Cart</a>';
 										else
 											str += '<a href = "'
 													+ window.contextRoot
@@ -207,7 +206,7 @@ $(function() {
 													+ row.artist
 													+ '/'
 													+ row.name
-													+ '" class="btn btn-outline-success btn-sm"> <span class = "fas fa-cart-plus"></span> </a>';
+													+ '" class="btn btn-outline-success btn-sm">Cart</a>';
 										return str;
 									}
 								} ]
@@ -261,9 +260,9 @@ $(function() {
 												+ row.artist
 												+ '/'
 												+ row.name
-												+ '" class="btn btn-outline-info btn-sm"> <span class = "fa fa-eye"></span> </a> &#160;';
+												+ '" class="btn btn-outline-info btn-sm">View</a> &#160;';
 										if (row.songs < 1 || window.role != 'USER')
-											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
+											str += '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled">Cart</a>';
 										else
 											str += '<a href = "'
 													+ window.contextRoot
@@ -271,7 +270,7 @@ $(function() {
 													+ row.artist
 													+ '/'
 													+ row.name
-													+ '" class="btn btn-outline-success btn-sm"> <span class = "fas fa-cart-plus"></span> </a>';
+													+ '" class="btn btn-outline-success btn-sm">Cart</a>';
 										return str;
 									}
 								} ]
@@ -327,7 +326,7 @@ $(function() {
 									bSortable : false,
 									mRender : function(data, type, row, meta) {
 										if (window.role != 'USER')
-											return '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled"> <span class = "fas fa-cart-plus"></span> </a>';
+											return '<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-sm disabled">Cart</a>';
 										else
 											return '<a href = "'
 													+ window.contextRoot
@@ -337,7 +336,7 @@ $(function() {
 													+ row.album
 													+ '/'
 													+ row.track_no
-													+ '" class="btn btn-outline-success btn-sm"> <span class = "fa fa-cart-plus"></span> </a>';
+													+ '" class="btn btn-outline-success btn-sm">Cart</a>';
 									}
 								} ]
 					});
@@ -402,14 +401,14 @@ $(function() {
 						data : 'name',
 						bSortable : false,
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/manage/'+row.artist+'/'+row.name+'" class = "btn btn-outline-success btn-sm"> <span class = "far fa-edit"></span> </a>';
+							return '<a href = "'+window.contextRoot+'/manage/'+row.artist+'/'+row.name+'" class = "btn btn-outline-success btn-sm">Edit</a>';
 						}
 					},
 					{
 						data : 'name',
 						bSortable : false,
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/manage/'+row.artist+'/'+row.name+'/songs" class = "btn btn-outline-info btn-sm"> <span class = "fas fa-plus"></span> </a>';
+							return '<a href = "'+window.contextRoot+'/manage/'+row.artist+'/'+row.name+'/songs" class = "btn btn-outline-info btn-sm">Add Songs</a>';
 						}
 					}],
 					initComplete : function() {
@@ -490,7 +489,7 @@ $(function() {
 						data : 'name',
 						bSortable : false,
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/manage/artist/'+row.name+'" class = "btn btn-outline-success btn-sm"> <span class = "far fa-edit"></span> </a>';
+							return '<a href = "'+window.contextRoot+'/manage/artist/'+row.name+'" class = "btn btn-outline-success btn-sm">Edit</a>';
 						}
 					}
 					],
@@ -571,7 +570,7 @@ $(function() {
 						data : 'name',
 						bSortable : false,
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/manage/genre/'+row.name+'" class = "btn btn-outline-success btn-sm"> <span class = "far fa-edit"></span> </a>';
+							return '<a href = "'+window.contextRoot+'/manage/genre/'+row.name+'" class = "btn btn-outline-success btn-sm">Edit</a>';
 						}
 					}
 					],
@@ -647,7 +646,7 @@ $(function() {
 						data : 'name',
 						bSortable : false,
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/manage/'+row.artist+'/'+row.album+'/'+row.track_no+'" class = "btn btn-outline-success btn-sm"> <span class = "far fa-edit"></span> </a>';
+							return '<a href = "'+window.contextRoot+'/manage/'+row.artist+'/'+row.album+'/'+row.track_no+'" class = "btn btn-outline-success btn-sm">Edit</a>';
 						}
 					}]
 		});
@@ -703,7 +702,7 @@ $(function() {
 						data : 'name',
 						bSortable : false,
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/buy/'+row.artist+'/'+row.name+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
+							return '<a href = "'+window.contextRoot+'/checkout/'+row.artist+'/'+row.name+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
 						}
 					},
 					{
@@ -766,7 +765,7 @@ $(function() {
 						data : 'name',
 						bSortable : false,
 						mRender : function(data, type, row) {
-							return '<a href = "'+window.contextRoot+'/buy/'+row.artist+'/'+row.album+'/'+row.track_no+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
+							return '<a href = "'+window.contextRoot+'/checkout/'+row.artist+'/'+row.album+'/'+row.track_no+'" class = "btn btn-outline-success btn-sm"> Buy </a>';
 						}
 					},
 					{
@@ -902,6 +901,182 @@ $(function() {
 								return 'Song will be delivered on <br/>' + d;
 						}
 					}]
+		});
+	}
+	var $checkoutAlbumTable = $('#checkoutAlbum');
+	if ($checkoutAlbumTable.length) {
+		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/' + window.artist + '/' + window.album;
+		console.log(jsonURL);
+		$checkoutAlbumTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Albums', '5 Albums', '10 Albums',
+							'All Albums' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+					{
+						bSortable : false,
+						data : 'pic',
+						mRender : function(data, type, row) {
+							return '<img src="'
+									+ window.contextRoot
+									+ '/resources/images/' + data
+									+ '" class = "dataTableIMG"/>';
+						}
+					},
+					{
+						data : 'name',
+					},
+					{
+						data : 'artist'
+					},
+					{
+						data : 'genre'
+					},
+					{
+						data : 'lang'
+					}
+					]
+		});
+	}
+	var $checkoutAlbumsTable = $('#checkoutAlbums');
+	if ($checkoutAlbumsTable.length) {
+		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/albums';
+		console.log(jsonURL);
+		$checkoutAlbumsTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Albums', '5 Albums', '10 Albums',
+							'All Albums' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+					{
+						bSortable : false,
+						data : 'pic',
+						mRender : function(data, type, row) {
+							return '<img src="'
+									+ window.contextRoot
+									+ '/resources/images/' + data
+									+ '" class = "dataTableIMG"/>';
+						}
+					},
+					{
+						data : 'name',
+					},
+					{
+						data : 'artist'
+					},
+					{
+						data : 'genre'
+					},
+					{
+						data : 'lang'
+					},
+					{
+						data : 'rate',
+						mRender : function(data, type, row) {
+							return '&#8377; ' + data + '/-';
+						}
+					}
+					]
+		});
+	}
+	var $checkoutSongTable = $('#checkoutSong');
+	if ($checkoutSongTable.length) {
+		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/' + window.artist + '/' + window.album + '/' + window.track;
+		$checkoutSongTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Songs', '5 Songs', '10 Songs',
+							'All Songs' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+					{
+						data : 'artist'
+					},
+					{
+						data : 'album',
+					},
+					{
+						data : 'track_no'
+					},
+					{
+						data : 'name'
+					},
+					{
+						data : 'preview',
+						bSortable : false,
+						mRender : function(data, type, row) {
+							return '<audio class="playback" controls=\'controls\' style="width: 200px;" controlsList="nodownload"><source src="'
+									+ window.contextRoot
+									+ '/resources/audios/'
+									+ data
+									+ '" type="audio/mpeg"></audio>';
+						}
+					}
+					]
+		});
+	}
+	var $checkoutSongsTable = $('#checkoutSongs');
+	if ($checkoutSongsTable.length) {
+		jsonURL = window.contextRoot + '/json/data/' + window.email + '/cart/songs';
+		$checkoutSongsTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Songs', '5 Songs', '10 Songs',
+							'All Songs' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+					{
+						data : 'artist'
+					},
+					{
+						data : 'album',
+					},
+					{
+						data : 'track_no'
+					},
+					{
+						data : 'name'
+					},
+					{
+						data : 'rate',
+						mRender : function(data, type, row) {
+							return '&#8377; ' + data + '/-';
+						}
+					},
+					{
+						data : 'preview',
+						bSortable : false,
+						mRender : function(data, type, row) {
+							return '<audio class="playback" controls=\'controls\' style="width: 200px;" controlsList="nodownload"><source src="'
+									+ window.contextRoot
+									+ '/resources/audios/'
+									+ data
+									+ '" type="audio/mpeg"></audio>';
+						}
+					}
+					]
 		});
 	}
 });

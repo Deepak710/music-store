@@ -9,6 +9,7 @@ public interface CartDAO {
 	boolean update(Cart c);
 	boolean delete(Cart c);
 	Cart get(String email, String path);
+	Cart getActive(String email, String path);
 	List<Cart> listBoughtSongs(String email);
 	List<Cart> listBoughtAlbums(String email);
 	List<Cart> listSongs(String email);

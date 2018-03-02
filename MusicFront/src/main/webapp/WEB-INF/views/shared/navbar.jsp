@@ -36,7 +36,7 @@
 				<c:otherwise>
 					<ul class="navbar-nav ml-auto">
 						<li class="nav-item dropdown">
-							<a class="nav-link dropdown-toggle" data-toggle="dropdown">Hey ${logged}!</a>
+							<a class="nav-link dropdown-toggle" data-toggle="dropdown">Hey ${logged} !</a>
 							<div class="dropdown-menu">
 								<a class="dropdown-item" href="${contextRoot}/cart">View Cart</a>
 								<a class="dropdown-item" href="${contextRoot}/signout">Sign Out</a>

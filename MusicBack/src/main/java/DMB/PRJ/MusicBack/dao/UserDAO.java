@@ -2,7 +2,6 @@ package DMB.PRJ.MusicBack.dao;
 
 import java.util.List;
 
-import DMB.PRJ.MusicBack.dto.Cart;
 import DMB.PRJ.MusicBack.dto.User;
 
 public interface UserDAO {

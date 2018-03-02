@@ -123,4 +123,14 @@ public class CartDAOImpl implements CartDAO {
 		}
 	}
 
+	@Override
+	public Cart getActive(String email, String path) {
+		String select = "FROM Cart WHERE email = :email AND path = :path AND active = :active";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("email", email);
+		q.setParameter("path", path);
+		q.setParameter("active", true);
+		return (Cart)q.getSingleResult();
+	}
+
 }

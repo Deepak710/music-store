@@ -53,16 +53,19 @@
 			<br/>
 			<c:choose>
 				<c:when test = "${rate < 1}">
-					<a href="javascript:void(0)"><button style = "font-size:24px" class = "btn btn-outline-warning disabled"> <strike>No Songs in Album...  <i class="fa fa-cart-arrow-down"></i></strike></button></a>
+					<a href="javascript:void(0)"><button style = "font-size:24px" class = "btn btn-outline-warning disabled"> <strike>No Songs in Album...</strike></button></a>
 				</c:when>
-				<c:when test = "${role != 'USER'}">
-					<a href="javascript:void(0)"><button style = "font-size:24px" class = "btn btn-outline-warning disabled"> Log In to Buy Album!!! <i class="fa fa-cart-arrow-down"></i></button></a>
+				<c:when test = "${role == 'null'}">
+					<a href="${contextRoot}/manage/login"><button style = "font-size:24px" class = "btn btn-outline-warning"> Log In to Buy Album!!!</button></a>
+				</c:when>
+				<c:when test = "${role == 'ADMIN'}">
+					<a href="javascript:void(0)"><button style = "font-size:24px" class = "btn btn-outline-warning disabled">Admins Can't Buy Albums</button></a>
 				</c:when>
 				<c:otherwise>
-					<a href="${contextRoot}/add/${album.artist}/${album.name}"><button style = "font-size:24px" class = "btn btn-outline-success">Buy Now  <i class="fa fa-cart-arrow-down"></i></button></a>
+					<a href="${contextRoot}/add/${album.artist}/${album.name}"><button style = "font-size:24px" class = "btn btn-outline-success">Add Album to Cart</button></a>
 				</c:otherwise>
 			</c:choose>
-			&#160;&#160;<a href="${contextRoot}/all/album"><button style = "font-size:24px" class = "btn btn-outline-warning">Back  <i class="fa fa-chevron-left"></i></button></a>
+			&#160;&#160;<a href="${contextRoot}/all/album"><button style = "font-size:24px" class = "btn btn-outline-warning">Back</button></a>
 		</div>
 	</div>
 </div>
