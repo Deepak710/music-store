@@ -14,6 +14,5 @@ public class SongValidator implements Validator {
 	public void validate(Object target, Errors e) {
 		Song s = (Song) target;
 		if (s.getFile()==null || s.getFile().getOriginalFilename().equals("")) e.rejectValue("file", null, "A Preview for the Ears...");
-		else if (!s.getFile().getContentType().equals("audio/mp3")) e.rejectValue("file", null, "Select a MPEG Audio only.");
 	}
 }

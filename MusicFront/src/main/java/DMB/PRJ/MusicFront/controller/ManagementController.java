@@ -492,7 +492,7 @@ public class ManagementController {
 			mv.addObject("message", c.getName() + " Logged in Successfully");
 		}
 
-		if(udao.loggedUserRole().equals("USER")) {
+		if(udao.loggedUserRole().equals("USER")||udao.loggedUserRole().equals("ADMIN")) {
 			mv.addObject("logged", udao.loggedUser());
 			return new ModelAndView("redirect:/home");
 		}

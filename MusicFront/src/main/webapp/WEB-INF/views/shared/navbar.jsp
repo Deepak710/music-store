@@ -21,6 +21,9 @@
 								href="${contextRoot}/manage/genres" id="managegenres">Manage
 									Genres</a></li>
 							<li class="nav-item"><a class="nav-link"
+								href="${contextRoot}/sales" id="managegenres">Sales
+									Report</a></li>
+							<li class="nav-item"><a class="nav-link"
 								href="${contextRoot}/manage/signup" id="signup">Sign Up</a></li>
 							<li class="nav-item"><a class="nav-link"
 								href="${contextRoot}/signout" id="signout">Sign Out</a></li>

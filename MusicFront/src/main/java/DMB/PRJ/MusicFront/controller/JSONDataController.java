@@ -167,12 +167,18 @@ public class JSONDataController {
 	}
 	@RequestMapping("{email}/cart/{artist}/{album}")
 	@ResponseBody
-	public Album manageCheckoutAlbum(@PathVariable("email") String email, @PathVariable("artist") String artist, @PathVariable("album") String album) {
-		return albdao.get(artist, album);
+	public List<Album> manageCheckoutAlbum(@PathVariable("email") String email, @PathVariable("artist") String artist, @PathVariable("album") String album) {
+		List<Album> alist = albdao.listAllAlbums();
+		alist.clear();
+		alist.add(albdao.get(artist, album));
+		return alist;
 	}
 	@RequestMapping("{email}/cart/{artist}/{album}/{track}")
 	@ResponseBody
-	public Song manageCheckoutSong(@PathVariable("email") String email, @PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
-		return sdao.get(artist, album, track);
+	public List<Song> manageCheckoutSong(@PathVariable("email") String email, @PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) {
+		List<Song> slist = sdao.listAllSongs();
+		slist.clear();
+		slist.add(sdao.get(artist, album, track));
+		return slist;
 	}
 }

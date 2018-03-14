@@ -133,4 +133,18 @@ public class CartDAOImpl implements CartDAO {
 		return (Cart)q.getSingleResult();
 	}
 
+	@Override
+	public int priceTill(String datefrom, String dateto) {
+		String select = "FROM Cart WHERE date > :datefrom AND date < :dateto AND active = :active";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("datefrom", datefrom);
+		q.setParameter("dateto", dateto);
+		q.setParameter("active", false);
+		int rate = 0;
+		List<Cart> clist = q.getResultList();
+		for(Cart c:clist)
+			rate += c.getTotal();
+		return rate;
+	}
+
 }

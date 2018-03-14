@@ -2,6 +2,7 @@ package DMB.PRJ.MusicFront.controller;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 
@@ -550,6 +551,26 @@ public class PageController {
 			mv.addObject("logged", u.getName());
 			List<Cart> clist = cdao.listSongs(u.getEmail()); 
 			for(Cart c:clist) cdao.delete(c);
+		}
+		mv.addObject("role", udao.loggedUserRole());
+		return mv;
+	}
+	@RequestMapping(value="/sales")
+	public ModelAndView viewSales() {
+		ModelAndView mv=new ModelAndView("page");
+		mv.addObject("userClickSales", true);
+		if(udao.loggedUser().equals("null")) {
+			mv.addObject("logged", udao.loggedUser());
+			return new ModelAndView("redirect:/home");
+		}
+		else {
+			User u = udao.get(udao.loggedUser());
+			mv.addObject("logged", u.getName());
+			mv.addObject("title", "Sales Report");
+			mv.addObject("week", cdao.priceTill(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusWeeks(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+			mv.addObject("month", cdao.priceTill(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusMonths(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+			mv.addObject("year", cdao.priceTill(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusYears(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+			mv.addObject("all", cdao.priceTill("2018-01-13", new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;

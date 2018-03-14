@@ -45,6 +45,9 @@
 				<c:when test="${userClickCart == true}">
 					<%@include file="./shared/cart.jsp"%>
 				</c:when>
+				<c:when test="${userClickSales == true}">
+					<%@include file="./shared/sales.jsp"%>
+				</c:when>
 				<c:when test="${userClickCheckout == true}">
 					<%@include file="./shared/checkout.jsp"%>
 				</c:when>
