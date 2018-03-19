@@ -34,6 +34,7 @@
 						</table>
 					</div>
 					<h4>Album Rate: &#8377;${rate}</h4>
+					<h4>Album will be delivered to: ${address}</h4>
 					<h4>Estimated Delivery Date: ${date}</h4>
 					<a href="${contextRoot}/buy/${artist}/${album}"
 						class="btn btn-outline-success btn-lg">Buy Album</a> <a
@@ -75,6 +76,7 @@
 						</table>
 					</div>
 					<h4>Albums Rate: &#8377;${rate}</h4>
+					<h4>Albums will be delivered to: ${address}</h4>
 					<h4>Estimated Delivery Date: ${date}</h4>
 					<a href="${contextRoot}/buy/all/albums"
 						class="btn btn-outline-success btn-lg">Buy All Albums</a> <a
@@ -117,6 +119,7 @@
 						</table>
 					</div>
 					<h4>Song Rate: &#8377;${rate}</h4>
+					<h4>Song will be delivered to: ${address}</h4>
 					<h4>Estimated Delivery Date: ${date}</h4>
 					<a href="${contextRoot}/buy/${artist}/${album}/${track}"
 						class="btn btn-outline-success btn-lg">Buy Song</a> <a
@@ -158,6 +161,7 @@
 						</table>
 					</div>
 					<h4>Songs Rate: &#8377;${rate}</h4>
+					<h4>Songs will be delivered to: ${address}</h4>
 					<h4>Estimated Delivery Date: ${date}</h4>
 					<a href="${contextRoot}/buy/all/songs"
 						class="btn btn-outline-success btn-lg">Buy All Songs</a> <a

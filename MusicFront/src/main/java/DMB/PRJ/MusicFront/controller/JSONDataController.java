@@ -148,7 +148,9 @@ public class JSONDataController {
 		for(Cart c:clist) {
 			String [] strList = c.getPath().split("/");
 			Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
-			slist.add(s);
+			Album a = albdao.get(strList[0], strList[1]);
+			if (a.isActive() && artdao.get(a.getArtist()).isActive() && gdao.get(a.getGenre()).isActive())
+				slist.add(s);
 		}
 		return slist;
 	}
@@ -161,7 +163,8 @@ public class JSONDataController {
 		for(Cart c:clist) {
 			String [] strList = c.getPath().split("/");
 			Album a = albdao.get(strList[0], strList[1]);
-			alist.add(a);
+			if (a.isActive() && artdao.get(a.getArtist()).isActive() && gdao.get(a.getGenre()).isActive())
+				alist.add(a);
 		}
 		return alist;
 	}

@@ -220,6 +220,8 @@ public class PageController {
 		ModelAndView mv=new ModelAndView("page");
 		Album alb = albdao.get(artist, album);
 		if (alb == null) throw new EntityNotFoundException("Unspecified Album Parameters...");
+		if (alb.isActive() == false || artdao.get(artist).isActive() == false || gdao.get(alb.getGenre()).isActive() == false)
+			return new ModelAndView("redirect:/home");
 		alb.setView(alb.getView()+1);
 		albdao.update(alb);
 		mv.addObject("title", artist + " - " + album);
@@ -298,6 +300,7 @@ public class PageController {
 			mv.addObject("artist", artist);
 			mv.addObject("album", album);
 			mv.addObject("email", u.getEmail());
+			mv.addObject("address", u.getAddress());
 			mv.addObject("rate", albdao.get(artist, album).getRate());
 			mv.addObject("date", LocalDate.now().plusDays(7));
 		}
