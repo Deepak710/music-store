@@ -14,5 +14,7 @@ public interface CartDAO {
 	List<Cart> listBoughtAlbums(String email);
 	List<Cart> listSongs(String email);
 	List<Cart> listAlbums(String email);
-	int priceTill(String datefrom, String dateto);
+	int price(String datefrom, String dateto);
+	int priceTill(String path, String datefrom, String dateto);
+	int numberSold(String path, String datefrom, String dateto);
 }

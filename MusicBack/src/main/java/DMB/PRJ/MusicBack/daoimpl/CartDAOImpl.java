@@ -134,12 +134,40 @@ public class CartDAOImpl implements CartDAO {
 	}
 
 	@Override
-	public int priceTill(String datefrom, String dateto) {
+	public int priceTill(String path, String datefrom, String dateto) {
+		String select = "FROM Cart WHERE date > :datefrom AND date < :dateto AND path = :path AND active = :active";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("datefrom", datefrom);
+		q.setParameter("dateto", dateto);
+		q.setParameter("path", path);
+		q.setParameter("active", false);
+		if (q.getResultList().isEmpty()) return 0;
+		int rate = 0;
+		List<Cart> clist = q.getResultList();
+		for(Cart c:clist)
+			rate += c.getTotal();
+		return rate;
+	}
+	
+	public int numberSold(String path, String datefrom, String dateto) {
+		String select = "FROM Cart WHERE date > :datefrom AND date < :dateto AND path = :path AND active = :active";
+		Query q = sf.getCurrentSession().createQuery(select);
+		q.setParameter("datefrom", datefrom);
+		q.setParameter("dateto", dateto);
+		q.setParameter("path", path);
+		q.setParameter("active", false);
+		if (q.getResultList().isEmpty()) return 0;
+		return q.getResultList().size();
+	}
+
+	@Override
+	public int price(String datefrom, String dateto) {
 		String select = "FROM Cart WHERE date > :datefrom AND date < :dateto AND active = :active";
 		Query q = sf.getCurrentSession().createQuery(select);
 		q.setParameter("datefrom", datefrom);
 		q.setParameter("dateto", dateto);
 		q.setParameter("active", false);
+		if (q.getResultList().isEmpty()) return 0;
 		int rate = 0;
 		List<Cart> clist = q.getResultList();
 		for(Cart c:clist)

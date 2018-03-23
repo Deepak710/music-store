@@ -570,10 +570,10 @@ public class PageController {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
 			mv.addObject("title", "Sales Report");
-			mv.addObject("week", cdao.priceTill(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusWeeks(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
-			mv.addObject("month", cdao.priceTill(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusMonths(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
-			mv.addObject("year", cdao.priceTill(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusYears(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
-			mv.addObject("all", cdao.priceTill("2018-01-13", new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+			mv.addObject("week", cdao.price(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusWeeks(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+			mv.addObject("month", cdao.price(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusMonths(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+			mv.addObject("year", cdao.price(new SimpleDateFormat("yyyy-MM-dd").format(Date.from(LocalDate.now().plusYears(-1).atStartOfDay(ZoneId.systemDefault()).toInstant())), new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
+			mv.addObject("all", cdao.price("2018-01-13", new SimpleDateFormat("yyyy-MM-dd").format(new Date())));
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		return mv;

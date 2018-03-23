@@ -1079,4 +1079,91 @@ $(function() {
 					]
 		});
 	}
+	var $reportAlbumTable = $('#reportAlbum');
+	if ($reportAlbumTable.length) {
+		jsonURL = window.contextRoot + '/json/data/report/albums';
+		$reportAlbumTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Albums', '5 Albums', '10 Albums',
+							'All Albums' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+				{
+					bSortable : false,
+					data : 'pic',
+					mRender : function(data, type, row) {
+						return '<img src="'
+								+ window.contextRoot
+								+ '/resources/images/' + data
+								+ '" class = "dataTableIMG"/>';
+					}
+				},
+				{
+					data : 'path'
+				},
+				{
+					data : 'monthSale',
+					mRender : function(data, type, row) {
+						return data + ' Units Sold for &#8377; ' + row.monthRate;
+					}
+				},
+				{
+					data : 'allSale',
+					mRender : function(data, type, row) {
+						return data + ' Units Sold for &#8377; ' + row.allRate;
+					}
+				}
+			]
+		});
+	}
+	var $reportSongTable = $('#reportSong');
+	if ($reportSongTable.length) {
+		jsonURL = window.contextRoot + '/json/data/report/songs';
+		$reportSongTable
+		.DataTable({
+			lengthMenu : [
+					[ 3, 5, 10, -1 ],
+					[ '3 Songs', '5 Songs', '10 Songs',
+							'All Songs' ] ],
+			pageLength : 5,
+			ajax : {
+				url : jsonURL,
+				dataSrc : ''
+			},
+			columns : [
+				{
+					bSortable : false,
+					data : 'preview',
+					mRender : function(data, type, row) {
+						return '<audio class="playback" controls=\'controls\' style="width: 200px;" controlsList="nodownload"><source src="'
+							+ window.contextRoot
+							+ '/resources/audios/'
+							+ data
+							+ '" type="audio/mpeg"></audio>';
+					}
+				},
+				{
+					data : 'path'
+				},
+				{
+					data : 'monthSale',
+					mRender : function(data, type, row) {
+						return data + ' Units Sold for &#8377; ' + row.monthRate;
+					}
+				},
+				{
+					data : 'allSale',
+					mRender : function(data, type, row) {
+						return data + ' Units Sold for &#8377; ' + row.allRate;
+					}
+				}
+			]
+		});
+	}
 });
