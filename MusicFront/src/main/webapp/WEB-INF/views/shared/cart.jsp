@@ -45,8 +45,15 @@
 		</div>
 		<div class = "col-md-12 text-right">
 			<br/>
-			<a href="${contextRoot}/checkout/all/albums" class="btn btn-outline-success btn-lg">Buy ALL Albums</a>&emsp;
-			<a href="${contextRoot}/remove/all/albums" class="btn btn-outline-warning btn-lg">Remove ALL Albums</a>
+			<c:choose>
+				<c:when test="${cartalbums > 0}">
+					<a href="${contextRoot}/checkout/all/albums" class="btn btn-outline-success btn-lg">Buy ALL Albums</a>
+				</c:when>
+				<c:otherwise>
+					<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-lg disabled">Buy ALL Albums</a>
+				</c:otherwise>
+			</c:choose>
+			&emsp;<a href="${contextRoot}/remove/all/albums" class="btn btn-outline-warning btn-lg">Remove ALL Albums</a>
 		</div>
 	</div>
 	<div class =  "row">
@@ -90,8 +97,15 @@
 		</div>
 		<div class = "col-md-12 text-right">
 			<br/>
-			<a href="${contextRoot}/checkout/all/songs" class="btn btn-outline-success btn-lg">Buy ALL Songs</a>&emsp;
-			<a href="${contextRoot}/remove/all/songs" class="btn btn-outline-warning btn-lg">Remove ALL Songs</a>
+			<c:choose>
+				<c:when test="${cartsongs > 0}">
+					<a href="${contextRoot}/checkout/all/songs" class="btn btn-outline-success btn-lg">Buy ALL Songs</a>
+				</c:when>
+				<c:otherwise>
+					<a href = "javascript:void(0)" class="btn btn-outline-secondary btn-lg disabled">Buy ALL Songs</a>
+				</c:otherwise>
+			</c:choose>
+			&emsp;<a href="${contextRoot}/remove/all/songs" class="btn btn-outline-warning btn-lg">Remove ALL Songs</a>
 		</div>
 	</div>
 	<div class = "row">

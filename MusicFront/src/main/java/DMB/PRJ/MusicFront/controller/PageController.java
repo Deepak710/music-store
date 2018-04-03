@@ -120,6 +120,28 @@ public class PageController {
 			mv.addObject("email", u.getEmail());
 			mv.addObject("title", u.getName() + " Cart");
 			mv.addObject("name", u.getName());
+			List<Cart> clist =  cdao.listSongs(u.getEmail());
+			List<Song> slist = sdao.listAllSongs();
+			slist.clear();
+			for(Cart c:clist) {
+				String [] strList = c.getPath().split("/");
+				Song s = sdao.get(strList[0], strList[1], Integer.parseInt(strList[2]));
+				Album a = albdao.get(strList[0], strList[1]);
+				if (a.isActive() && artdao.get(a.getArtist()).isActive() && gdao.get(a.getGenre()).isActive())
+					slist.add(s);
+			}
+			mv.addObject("cartsongs", slist.size());
+			clist.clear();
+			clist = cdao.listAlbums(u.getEmail());
+			List<Album> alist = albdao.listAllAlbums();
+			alist.clear();
+			for(Cart c:clist) {
+				String [] strList = c.getPath().split("/");
+				Album a = albdao.get(strList[0], strList[1]);
+				if (a.isActive() && artdao.get(a.getArtist()).isActive() && gdao.get(a.getGenre()).isActive())
+					alist.add(a);
+			}
+			mv.addObject("cartalbums", alist.size());
 		}
 		mv.addObject("role", udao.loggedUserRole());
 		mv.addObject("userClickCart", true);
@@ -240,7 +262,7 @@ public class PageController {
 	}
 	@RequestMapping(value="/add/{artist}/{album}")
 	public ModelAndView cartAlbum(@PathVariable("artist") String artist, @PathVariable("album") String album) throws EntityNotFoundException {
-		ModelAndView mv=new ModelAndView("redirect:/view/" + artist + "/" + album);
+		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickAlbum", true);
 
 		if(udao.loggedUser().equals("null")) {
@@ -263,7 +285,7 @@ public class PageController {
 	}
 	@RequestMapping(value="/add/{artist}/{album}/{track}")
 	public ModelAndView cartSong(@PathVariable("artist") String artist, @PathVariable("album") String album, @PathVariable("track") int track) throws EntityNotFoundException {
-		ModelAndView mv=new ModelAndView("redirect:/view/" + artist + "/" + album);
+		ModelAndView mv=new ModelAndView("redirect:/cart");
 		mv.addObject("userClickAlbum", true);
 
 		if(udao.loggedUser().equals("null")) {
@@ -355,6 +377,7 @@ public class PageController {
 				rate += a.getRate();
 			}
 			mv.addObject("rate", rate);
+			mv.addObject("address", u.getAddress());
 			mv.addObject("date", LocalDate.now().plusDays(7));
 		}
 		mv.addObject("role", udao.loggedUserRole());
@@ -437,6 +460,7 @@ public class PageController {
 			User u = udao.get(udao.loggedUser());
 			mv.addObject("logged", u.getName());
 			mv.addObject("artist", artist);
+			mv.addObject("address", u.getAddress());
 			mv.addObject("album", album);
 			mv.addObject("track", track);
 			mv.addObject("email", u.getEmail());
@@ -492,6 +516,7 @@ public class PageController {
 				rate += s.getRate();
 			}
 			mv.addObject("rate", rate);
+			mv.addObject("address", u.getAddress());
 			mv.addObject("date", LocalDate.now().plusDays(7));
 		}
 		mv.addObject("role", udao.loggedUserRole());

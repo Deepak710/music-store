@@ -150,7 +150,7 @@ public class CartDAOImpl implements CartDAO {
 	}
 	
 	public int numberSold(String path, String datefrom, String dateto) {
-		String select = "FROM Cart WHERE date > :datefrom AND date < :dateto AND path = :path AND active = :active";
+		String select = "FROM Cart WHERE date >= :datefrom AND date <= :dateto AND path = :path AND active = :active";
 		Query q = sf.getCurrentSession().createQuery(select);
 		q.setParameter("datefrom", datefrom);
 		q.setParameter("dateto", dateto);
@@ -162,7 +162,7 @@ public class CartDAOImpl implements CartDAO {
 
 	@Override
 	public int price(String datefrom, String dateto) {
-		String select = "FROM Cart WHERE date > :datefrom AND date < :dateto AND active = :active";
+		String select = "FROM Cart WHERE date >= :datefrom AND date <= :dateto AND active = :active";
 		Query q = sf.getCurrentSession().createQuery(select);
 		q.setParameter("datefrom", datefrom);
 		q.setParameter("dateto", dateto);
