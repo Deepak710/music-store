@@ -18,4 +18,4 @@
 ### Features:
 * Get the Project report [here](https://drive.google.com/open?id=1k9a3gJPrgn0iOOU6jF0xB1z--LzylWpf)
 
-Contact Me: [Telegram](https://web.telegram.org/#/im?p=@AzorAhoy)
+Contact Me: [Telegram](https://t.me/AzorAhoy)
